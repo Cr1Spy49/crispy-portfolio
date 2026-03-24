@@ -307,6 +307,50 @@
         .btn-support:hover svg {
             fill: white;
         }
+		/* ========================================= */
+        /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (Медиа-запросы)   */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            /* 1. Блок "Обо мне" выстраиваем в колонку и центрируем */
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 0;
+            }
+
+            /* 2. Немного уменьшаем главную картинку-аватарку */
+            .hero-img-container {
+                flex: 0 0 280px;
+                height: 280px;
+            }
+
+            /* 3. Центрируем иконки (Modrinth, NameMC, Discord) */
+            .software-icons {
+                justify-content: center;
+            }
+
+            /* 4. Центрируем кнопки связи */
+            .hero-buttons {
+                margin: 0 auto;
+                align-items: center;
+            }
+
+            /* 5. Галерея: вместо 3 картинок в ряд делаем 1 на всю ширину */
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            /* 6. Чуть уменьшаем размер главных заголовков */
+            .hero h2 {
+                font-size: 2em;
+            }
+
+            .section-title {
+                font-size: 1.8em;
+                justify-content: center; /* Центрируем заголовки разделов */
+            }
+        }
     </style>
 </head>
 <body>
