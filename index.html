@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CriSpy | 3D Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Базовые настройки страницы */
+        :root {
+            --bg-dark-blue: #000208; /* Темный фон с синим оттенком */
+            --accent-orange: #FF6A00; /* Основной оранжевый */
+            --accent-orange-glow: rgba(255, 106, 0, 0.4);
+            --tg-blue: #2AABEE; /* Цвет Telegram */
+            --tg-blue-glow: rgba(42, 171, 238, 0.4);
+        }
+
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-dark-blue); 
+            color: #f0f0f0; 
+            line-height: 1.6;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+
+        /* Блок "Обо мне" */
+        .hero { 
+            display: flex; 
+            gap: 40px; 
+            align-items: center; 
+            padding: 80px 0; 
+            border-bottom: 2px dashed #222; 
+        }
+
+        .hero-img-container { 
+            flex: 0 0 380px; 
+            height: 380px; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            border: 4px solid var(--accent-orange); 
+            box-shadow: 0 0 25px var(--accent-orange-glow); 
+        }
+
+        .hero-img-container img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+
+        .hero-content { 
+            background-color: #111111; 
+            padding: 40px; 
+            border-radius: 15px; 
+            border: 1px solid #222; 
+            flex-grow: 1;
+        }
+
+        .hero h2 { 
+            font-size: 2.5em; 
+            color: #ffffff; 
+            margin-bottom: 20px; 
+            margin-top: 0; 
+            text-transform: uppercase; 
+        }
+
+        .hero p {
+            font-size: 1.05em;
+            color: #cccccc;
+            margin-bottom: 25px;
+        }
+
+        .hero p b { 
+            color: var(--accent-orange); 
+        }
+
+        /* Интерактивные иконки-ссылки (правая часть) */
+        .software-icons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .soft-icon {
+            width: 45px;
+            height: 45px;
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none; /* Убираем подчеркивание у ссылки */
+        }
+
+        .soft-icon img {
+            width: 24px; /* Размер самой иконки внутри квадрата */
+            height: 24px;
+            object-fit: contain;
+            opacity: 0.6; /* Делаем иконки чуть тусклыми по умолчанию */
+            transition: all 0.3s ease;
+        }
+
+        .soft-icon:hover img {
+            opacity: 1; /* При наведении иконка становится яркой */
+        }
+
+        /* Уникальные цвета при наведении */
+        .icon-modrinth:hover {
+            border-color: #00AF5C; /* Зеленый Modrinth */
+            box-shadow: 0 0 15px rgba(0, 175, 92, 0.5);
+        }
+        
+        .icon-namemc:hover {
+            border-color: #00E5FF; /* Голубой NameMC */
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+
+        .icon-discord:hover {
+            border-color: #5865F2; /* Фиолетово-синий Discord */
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+        }
+
+        /* Контейнер для кнопок связи */
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 320px;
+        }
+
+        .btn { 
+            display: inline-block; 
+            padding: 12px 25px; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 1.1em;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Кнопка Telegram (Синяя) */
+        .btn-telegram {
+            background-color: var(--tg-blue); 
+        }
+
+        .btn-telegram:hover {
+            background-color: #1c9be0; 
+            box-shadow: 0 0 15px var(--tg-blue-glow); 
+        }
+
+        /* Кнопка связаться со мной (Оранжевая) */
+        .btn-contact { 
+            background-color: var(--accent-orange); 
+        }
+        
+        .btn-contact:hover {
+            background-color: #e05d00;
+            box-shadow: 0 0 15px var(--accent-orange-glow); 
+        }
+
+        .hero-buttons p.note {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+
+        /* Заголовки разделов */
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #f0f0f0;
+            margin-bottom: 40px;
+            margin-top: 80px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 25px;
+            height: 25px;
+            background-color: var(--accent-orange);
+            box-shadow: 0 0 10px var(--accent-orange-glow); 
+            border-radius: 50%; /* Кружочки */
+        }
+
+        /* Сетка проектов (Только картинки) */
+        .gallery { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px; 
+            margin-bottom: 80px; 
+        }
+
+        .project-img { 
+            width: 100%; 
+            aspect-ratio: 16/10; 
+            background-color: #111; 
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #222;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            border-bottom: 6px solid var(--accent-orange); 
+        }
+        
+        .project-img img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+
+        .project-img:hover { 
+            transform: scale(1.03); 
+            border-color: var(--accent-orange); 
+            box-shadow: 0 0 20px var(--accent-orange-glow); 
+        }
+
+        /* Раздел Услуги */
+        .services-section {
+            padding: 80px 0;
+            border-top: 2px dashed #222;
+        }
+
+        .services-list-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(17, 17, 17, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #333;
+        }
+
+        .services-header {
+            font-size: 1.2em;
+            text-transform: uppercase;
+            color: #f0f0f0;
+            border-bottom: 2px solid var(--accent-orange);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .services-list-item {
+            list-style: none;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            color: #cccccc;
+        }
+
+        .services-list-item b {
+            color: #ffffff;
+        }
+
+        /* Раздел Поддержка */
+        .support-container {
+            padding: 80px 0 100px 0;
+            text-align: center;
+            border-top: 2px dashed #222;
+        }
+
+        .btn-support {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 40px;
+            background-color: transparent;
+            color: white;
+            border: 2px solid var(--accent-orange); 
+            text-decoration: none;
+            text-transform: uppercase;
+            border-radius: 10px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            font-weight: 700;
+        }
+
+        .btn-support:hover {
+            background-color: var(--accent-orange);
+            box-shadow: 0 0 20px var(--accent-orange-glow); 
+        }
+
+        .btn-support svg {
+            width: 22px;
+            height: 22px;
+            margin-right: 15px;
+            fill: var(--accent-orange); 
+            transition: fill 0.2s ease;
+        }
+
+        .btn-support:hover svg {
+            fill: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <section class="hero">
+            <div class="hero-img-container">
+                <img src="main_art.png" alt="CriSpy Art">
+            </div>
+            
+            <div class="hero-content">
+                <h2>Привет, Я Криспи!</h2>
+                
+                <p>Я создаю 3D-анимации и рендеры в <b>Blender</b>. Их делаю в стиле <b>Minecraft</b>. Занимаюсь своей деятельностью чуть больше года, а цены как булочка на базаре</p>
+                
+                <div class="software-icons">
+                    <a href="#" class="soft-icon icon-modrinth" title="Modrinth">
+                        <img src="modrinth_logo.png" alt="Modrinth">
+                    </a>
+                    
+                    <a href="#" class="soft-icon icon-namemc" title="NameMC">
+                        <img src="namemc_logo.png" alt="NameMC">
+                    </a>
+                    
+                    <a href="#" class="soft-icon icon-discord" title="Discord">
+                        <img src="discord_logo.png" alt="Discord">
+                    </a>
+                </div>
+                
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-telegram">Telegram канал</a>
+                    <a href="#support" class="btn btn-contact">Связаться со мной</a>
+                    <p class="note">Писать желательно по важным вопросам</p>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Рендеры</h2>
+        <section class="gallery">
+            <div class="project-img">
+                <img src="render1.png" alt="Minecraft Epic Battle">
+            </div>
+            <div class="project-img">
+                <img src="render2.jpg" alt="Atmospheric Landscape">
+            </div>
+            <div class="project-img">
+                <img src="render3.jpg" alt="Character Animation">
+            </div>
+			<div class="project-img">
+                <img src="render4.jpg" alt="Character Animation">
+            </div>
+        </section>
+
+        <section class="services-section" id="services">
+            <h2 class="section-title">Услуги и цены</h2>
+            
+            <div class="services-list-container">
+                <div class="services-header">Основные услуги и цены</div>
+                <ul style="padding: 0; margin: 0;">
+                    <li class="services-list-item"><b>Рендер головы (без моделей)</b> от 30 Грн</li>
+                    <li class="services-list-item"><b>Рендер головы (с моделями)</b> от 50 Грн</li>
+                    <li class="services-list-item"><b>Средний рендер (небольшая сцена) </b>  от 80 Грн</li>
+                    <li class="services-list-item"><b>Большой рендер</b> от 120 Грн</li>
+					<li class="services-list-item"><b>Каждый доп. персонаж к сцене</b> + 10 Грн</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="support-container" id="support">
+            <a href="#" class="btn-support">
+                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z"/></svg>
+                Поддержать меня
+            </a>
+        </section>
+
+    </div>
+
+</body>
+</html>
