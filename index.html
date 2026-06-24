@@ -361,30 +361,91 @@
             background: var(--border);
         }
 
+        /* ─── GALLERY TOGGLE ─── */
+        .gallery-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            color: inherit;
+            font: inherit;
+        }
+
+        .gallery-toggle-arrow {
+            width: 28px; height: 28px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .gallery-toggle-arrow svg {
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--muted);
+        }
+
+        .gallery-toggle:hover .gallery-toggle-arrow {
+            border-color: var(--orange);
+            background: var(--orange-dim);
+            box-shadow: 0 0 10px var(--orange-glow);
+        }
+
+        .gallery-toggle:hover .gallery-toggle-arrow svg {
+            color: var(--orange);
+        }
+
+        /* Стрелка смотрит вниз когда открыто, вверх когда закрыто */
+        .gallery-collapsed .gallery-toggle-arrow svg {
+            transform: rotate(-90deg);
+        }
+
+        .gallery-wrap {
+            overflow: hidden;
+            transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.35s ease;
+            max-height: 9999px;
+            opacity: 1;
+        }
+
+        .gallery-wrap.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
         /* ─── GALLERY ─── */
         .gallery-section { padding: 80px 0; }
 
         .gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            columns: 3;
+            column-gap: 16px;
         }
 
         .gallery-item {
             position: relative;
-            aspect-ratio: 16/10;
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid var(--border);
             cursor: pointer;
             background: var(--bg-card);
+            break-inside: avoid;
+            margin-bottom: 16px;
+            display: block;
         }
 
+        /* Каждый рендер отображается в своих естественных пропорциях —
+           landscape, square, portrait — без классов, само */
         .gallery-item img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease, filter 0.4s ease;
+            width: 100%;
+            height: auto;
             display: block;
+            transition: transform 0.4s ease, filter 0.4s ease;
         }
 
         .gallery-overlay {
@@ -415,14 +476,162 @@
             border-radius: 10px;
             border: 2px solid transparent;
             transition: border-color 0.3s, box-shadow 0.3s;
+            pointer-events: none;
         }
 
-        .gallery-item:hover img { transform: scale(1.06); filter: brightness(0.85); }
+        .gallery-item:hover img { transform: scale(1.04); filter: brightness(0.82); }
         .gallery-item:hover .gallery-overlay { opacity: 1; }
         .gallery-item:hover .gallery-overlay-text { transform: translateY(0); }
         .gallery-item:hover::after {
             border-color: var(--orange);
             box-shadow: 0 0 24px var(--orange-glow);
+        }
+
+        /* ─── LIGHTBOX ─── */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 6, 10, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-inner {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .lightbox-img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 12px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 60px rgba(255,106,0,0.15);
+            transform: scale(0.92);
+            transition: transform 0.3s ease, opacity 0.2s ease, translate 0.25s ease;
+            display: block;
+            will-change: transform, opacity, translate;
+        }
+
+        .lightbox.active .lightbox-img {
+            transform: scale(1);
+        }
+
+        .lightbox-img.slide-out-left {
+            translate: -60px 0;
+            opacity: 0;
+            transition: translate 0.2s ease, opacity 0.2s ease;
+        }
+
+        .lightbox-img.slide-out-right {
+            translate: 60px 0;
+            opacity: 0;
+            transition: translate 0.2s ease, opacity 0.2s ease;
+        }
+
+        .lightbox-img.slide-in-left {
+            translate: 60px 0;
+            opacity: 0;
+            transition: none;
+        }
+
+        .lightbox-img.slide-in-right {
+            translate: -60px 0;
+            opacity: 0;
+            transition: none;
+        }
+
+        .lightbox-img.slide-settle {
+            translate: 0 0;
+            opacity: 1;
+            transition: translate 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.25s ease;
+        }
+
+        .lightbox-caption {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--orange);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -48px;
+            right: 0;
+            width: 36px; height: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            color: var(--text);
+            border-color: var(--orange);
+            box-shadow: 0 0 12px var(--orange-glow);
+        }
+
+        .lightbox-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px; height: 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 1001;
+        }
+
+        .lightbox-nav:hover {
+            color: var(--text);
+            border-color: var(--orange);
+            box-shadow: 0 0 16px var(--orange-glow);
+        }
+
+        .lightbox-nav-prev { left: 24px; }
+        .lightbox-nav-next { right: 24px; }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: -36px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         /* ─── SERVICES ─── */
@@ -571,7 +780,67 @@
             gap: 10px;
         }
 
-        /* ─── ANIMATIONS ─── */
+        /* ─── AVAILABILITY BADGE ─── */
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(5, 6, 10, 0.85);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 100px;
+            padding: 6px 14px 6px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text);
+            user-select: none;
+        }
+
+        /* Позиция внутри hero-img-wrap */
+        .hero-img-wrap .availability-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2;
+        }
+
+        .availability-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .availability-badge.open .availability-dot {
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34,197,94,0.7);
+        }
+
+        .availability-badge.open .availability-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: rgba(34,197,94,0.25);
+            animation: pulse-dot 2s infinite;
+        }
+
+        .availability-badge.busy .availability-dot {
+            background: #f59e0b;
+            box-shadow: 0 0 8px rgba(245,158,11,0.7);
+        }
+
+        .availability-badge.closed .availability-dot {
+            background: #ef4444;
+            box-shadow: 0 0 8px rgba(239,68,68,0.5);
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.8); opacity: 0; }
+        }
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -593,16 +862,26 @@
             .hero-inner { grid-template-columns: 1fr; }
             .hero-img-wrap img { height: 300px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .gallery { grid-template-columns: repeat(2, 1fr); }
+            .gallery { columns: 2; }
             .services-inner { grid-template-columns: 1fr; gap: 32px; }
             nav { padding: 0 20px; }
             .nav-links { display: none; }
+            .lightbox-nav-prev { left: 10px; }
+            .lightbox-nav-next { right: 10px; }
         }
 
         @media (max-width: 560px) {
-            .gallery { grid-template-columns: 1fr; }
+            .gallery { columns: 1; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { transition: none; }
+            .lightbox, .lightbox-img { transition: none; }
+            .lightbox-img.slide-out-left,
+            .lightbox-img.slide-out-right,
+            .lightbox-img.slide-settle { transition: none; }
         }
     </style>
 </head>
@@ -630,6 +909,10 @@
             <div class="hero-img-wrap reveal">
                 <img src="main_art.png" alt="CriSpy Art">
                 <div class="hero-badge">3D Artist · Blender</div>
+                <div class="availability-badge open">
+                    <span class="availability-dot"></span>
+                    Открыт для заказов
+                </div>
             </div>
 
             <div class="hero-content">
@@ -670,13 +953,14 @@
 
     <!-- STATS -->
     <section class="stats-section">
+        <div class="container">
         <div class="stats-grid">
             <div class="stat-item reveal">
                 <div class="stat-num">1+</div>
                 <div class="stat-label">Год опыта</div>
             </div>
             <div class="stat-item reveal reveal-delay-1">
-                <div class="stat-num">4+</div>
+                <div class="stat-num" id="renders-count">4+</div>
                 <div class="stat-label">Рендеров в портфолио</div>
             </div>
             <div class="stat-item reveal reveal-delay-2">
@@ -688,38 +972,89 @@
                 <div class="stat-label">Скидок нету</div>
             </div>
         </div>
+        </div>
     </section>
 
     <!-- GALLERY -->
     <section class="gallery-section" id="renders">
-        <div class="section-header reveal">
+        <div class="container">
+        <div class="section-header reveal" id="gallery-header">
             <div class="section-dot"></div>
-            <h2 class="section-title">Рендеры</h2>
+            <button class="gallery-toggle" id="gallery-toggle" aria-expanded="true" aria-controls="gallery-wrap">
+                <h2 class="section-title">Рендеры</h2>
+                <span class="gallery-toggle-arrow" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </span>
+            </button>
             <div class="section-line"></div>
         </div>
 
+        <div class="gallery-wrap" id="gallery-wrap">
         <div class="gallery">
-            <div class="gallery-item reveal">
-                <img src="render1.png" alt="Minecraft Epic Battle">
+            <div class="gallery-item reveal" data-src="render1.png" data-caption="Подводный мир">
+                <img src="render1.png" alt="Подводный мир">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Подводный мир</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-1">
-                <img src="render2.jpg" alt="Atmospheric Landscape">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render2.jpg" data-caption="Хэллоуин">
+                <img src="render2.jpg" alt="Хэллоуин">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Хэллоуин</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2">
-                <img src="render3.jpg" alt="Character Animation">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render3.jpg" data-caption="День всех влюблённых">
+                <img src="render3.jpg" alt="День всех влюблённых">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">День всех влюблённых</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3">
-                <img src="render4.jpg" alt="Character Animation">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render4.jpg" data-caption="Крутой челик под деревом">
+                <img src="render4.jpg" alt="Крутой челик под деревом">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Крутой челик под деревом</span></div>
             </div>
+
+            <!-- Квадратные рендеры (1:1) -->
+            <div class="gallery-item reveal" data-src="render5.jpg" data-caption="Голова с шапкой">
+                <img src="render5.jpg" alt="Голова с шапкой">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Голова с шапкой</span></div>
+            </div>
+            <div class="gallery-item reveal reveal-delay-1" data-src="render6.jpg" data-caption="Парень в очках">
+                <img src="render6.jpg" alt="Парень в очках">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Парень в очках</span></div>
+            </div>
+            <div class="gallery-item reveal reveal-delay-2" data-src="render7.jpg" data-caption="Медовая голова">
+                <img src="render7.jpg" alt="Медовая голова">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Медовая голова</span></div>
+            </div>
+            <div class="gallery-item reveal reveal-delay-3" data-src="render8.jpg" data-caption="Очень крутой парень">
+                <img src="render8.jpg" alt="Очень крутой парень">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Очень крутой парень</span></div>
+            </div>
+
+            <!-- Вертикальный рендер (portrait) -->
+            <div class="gallery-item reveal" data-src="render9.jpg" data-caption="Холодный апокалипсис">
+                <img src="render9.jpg" alt="Холодный апокалипсис">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Холодный апокалипсис</span></div>
+            </div>
+
+            <!-- Стандартные горизонтальные (16:10) -->
+            <div class="gallery-item reveal reveal-delay-1" data-src="render10.jpg" data-caption="Данте и Вергилий">
+                <img src="render10.jpg" alt="Данте и Вергилий">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Данте и Вергилий</span></div>
+            </div>
+            <div class="gallery-item reveal reveal-delay-2" data-src="render11.jpg" data-caption="Занудная учёба">
+                <img src="render11.jpg" alt="Занудная учёба">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Занудная учёба</span></div>
+            </div>
+            <div class="gallery-item reveal reveal-delay-3" data-src="render12.jpg" data-caption="Парень у костра">
+                <img src="render12.jpg" alt="Парень у костра">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Парень у костра</span></div>
+            </div>
+        </div>
+        </div><!-- /gallery-wrap -->
         </div>
     </section>
 
     <!-- SERVICES -->
     <section class="services-section" id="services">
+        <div class="container">
         <div class="section-header reveal">
             <div class="section-dot"></div>
             <h2 class="section-title">Услуги и цены</h2>
@@ -758,10 +1093,12 @@
                 </div>
             </div>
         </div>
+        </div>
     </section>
 
     <!-- SUPPORT -->
     <section class="support-section" id="support">
+        <div class="container">
         <p class="hero-tag reveal" style="display:inline-block; margin-bottom:16px;">Поддержка</p>
         <h2 class="support-title reveal">Нравится моя работа?</h2>
         <p class="support-sub reveal">Закинь денюжку автору на пропитание</p>
@@ -771,8 +1108,25 @@
             </svg>
             Поддержать меня
         </a>
+        </div>
     </section>
 
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр рендера">
+    <button class="lightbox-nav lightbox-nav-prev" id="lb-prev" aria-label="Предыдущий">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="lightbox-inner">
+        <button class="lightbox-close" id="lb-close" aria-label="Закрыть">✕</button>
+        <img class="lightbox-img" id="lb-img" src="" alt="">
+        <div class="lightbox-caption" id="lb-caption"></div>
+        <div class="lightbox-counter" id="lb-counter"></div>
+    </div>
+    <button class="lightbox-nav lightbox-nav-next" id="lb-next" aria-label="Следующий">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
 </div>
 
 <!-- FOOTER -->
@@ -786,6 +1140,7 @@
 </footer>
 
 <script>
+    // ─── REVEAL ON SCROLL ───
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             if (e.isIntersecting) {
@@ -797,7 +1152,7 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Nav scroll effect
+    // ─── NAV SCROLL ───
     const nav = document.querySelector('nav');
     window.addEventListener('scroll', () => {
         nav.style.background = window.scrollY > 40
@@ -805,7 +1160,7 @@
             : 'rgba(5, 6, 10, 0.7)';
     });
 
-    // Counter animation for stats
+    // ─── COUNTER ANIMATION ───
     function animateCounter(el, target, suffix = '') {
         let current = 0;
         const step = target / 40;
@@ -819,13 +1174,20 @@
         }, 30);
     }
 
+    // Авто-считаем количество рендеров из галереи
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const rendersCountEl = document.getElementById('renders-count');
+    if (rendersCountEl) {
+        rendersCountEl.textContent = galleryItems.length + '+';
+    }
+
     const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             if (e.isIntersecting) {
                 const nums = document.querySelectorAll('.stat-num');
                 const data = [
                     { val: 1, suffix: '+' },
-                    { val: 4, suffix: '+' },
+                    { val: galleryItems.length, suffix: '+' },
                     { val: 30, suffix: '₽' },
                     { val: 100, suffix: '%' },
                 ];
@@ -837,6 +1199,107 @@
 
     const statsSection = document.querySelector('.stats-section');
     if (statsSection) statsObserver.observe(statsSection);
+
+    // ─── LIGHTBOX ───
+    const lightbox = document.getElementById('lightbox');
+    const lbImg    = document.getElementById('lb-img');
+    const lbCaption = document.getElementById('lb-caption');
+    const lbCounter = document.getElementById('lb-counter');
+    const lbClose  = document.getElementById('lb-close');
+    const lbPrev   = document.getElementById('lb-prev');
+    const lbNext   = document.getElementById('lb-next');
+
+    const items = Array.from(galleryItems);
+    let currentIndex = 0;
+    let isAnimating = false;
+
+    function setImage(src, caption, index) {
+        lbImg.src = src;
+        lbImg.alt = caption || '';
+        lbCaption.textContent = caption || '';
+        lbCounter.textContent = `${index + 1} / ${items.length}`;
+    }
+
+    function openLightbox(index) {
+        currentIndex = index;
+        const item = items[currentIndex];
+        setImage(item.dataset.src, item.dataset.caption, currentIndex);
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        lbClose.focus();
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+        // Сбрасываем классы анимации
+        lbImg.className = 'lightbox-img';
+    }
+
+    function navigate(direction) {
+        // direction: -1 = prev (←), 1 = next (→)
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const outClass = direction > 0 ? 'slide-out-left' : 'slide-out-right';
+        const inClass  = direction > 0 ? 'slide-in-left'  : 'slide-in-right';
+
+        // Фаза 1: текущее изображение уезжает
+        lbImg.classList.add(outClass);
+
+        setTimeout(() => {
+            // Фаза 2: меняем источник и ставим начальную позицию
+            currentIndex = (currentIndex + direction + items.length) % items.length;
+            const item = items[currentIndex];
+            setImage(item.dataset.src, item.dataset.caption, currentIndex);
+
+            lbImg.classList.remove(outClass);
+            lbImg.classList.add(inClass);
+
+            // Фаза 3: через один кадр запускаем settle (плавный въезд)
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    lbImg.classList.remove(inClass);
+                    lbImg.classList.add('slide-settle');
+
+                    setTimeout(() => {
+                        lbImg.classList.remove('slide-settle');
+                        isAnimating = false;
+                    }, 280);
+                });
+            });
+        }, 200);
+    }
+
+    items.forEach((item, i) => {
+        item.addEventListener('click', () => openLightbox(i));
+    });
+
+    lbClose.addEventListener('click', closeLightbox);
+    lbPrev.addEventListener('click', () => navigate(-1));
+    lbNext.addEventListener('click', () => navigate(1));
+
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape')     closeLightbox();
+        if (e.key === 'ArrowLeft')  navigate(-1);
+        if (e.key === 'ArrowRight') navigate(1);
+    });
+
+    // ─── GALLERY TOGGLE ───
+    const galleryToggleBtn = document.getElementById('gallery-toggle');
+    const galleryWrap      = document.getElementById('gallery-wrap');
+    const galleryHeader    = document.getElementById('gallery-header');
+
+    galleryToggleBtn.addEventListener('click', () => {
+        const isCollapsed = galleryWrap.classList.toggle('collapsed');
+        galleryToggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
+        galleryHeader.classList.toggle('gallery-collapsed', isCollapsed);
+    });
 </script>
 
 </body>
