@@ -407,7 +407,7 @@
         }
 
         .gallery-wrap {
-            overflow: hidden;
+            overflow: clip;
             transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
                         opacity 0.35s ease;
             max-height: 9999px;
@@ -857,6 +857,136 @@
         .reveal-delay-3 { transition-delay: 0.3s; }
         .reveal-delay-4 { transition-delay: 0.4s; }
 
+        /* ─── REVIEWS ─── */
+        .reviews-section {
+            padding: 80px 0;
+        }
+
+        .reviews-wrap {
+            overflow: clip;
+            transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.35s ease;
+            max-height: 9999px;
+            opacity: 1;
+        }
+
+        .reviews-wrap.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .reviews-collapsed .gallery-toggle-arrow svg {
+            transform: rotate(-90deg);
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 14px;
+            max-width: 860px;
+        }
+
+        .review-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .review-card:hover {
+            border-color: rgba(255,106,0,0.35);
+            box-shadow: 0 0 20px rgba(255,106,0,0.07);
+        }
+
+        .review-render {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .review-body {
+            padding: 14px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .review-quote {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.65;
+            flex: 1;
+        }
+
+        .review-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .review-author {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .review-nick {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .review-render-name {
+            font-size: 0.68rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .review-price-row {
+            flex-shrink: 0;
+            background: var(--orange-dim);
+            border: 1px solid rgba(255,106,0,0.25);
+            border-radius: 6px;
+            padding: 4px 9px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .review-price-label {
+            font-size: 0.65rem;
+            color: rgba(255,106,0,0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .review-price-label::after {
+            content: ':';
+        }
+
+        .review-price-val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.9rem;
+            color: var(--orange);
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
         /* ─── RESPONSIVE ─── */
         @media (max-width: 900px) {
             .hero-inner { grid-template-columns: 1fr; }
@@ -864,16 +994,32 @@
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .gallery { columns: 2; }
             .services-inner { grid-template-columns: 1fr; gap: 32px; }
+            .reviews-grid { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
             nav { padding: 0 20px; }
             .nav-links { display: none; }
             .lightbox-nav-prev { left: 10px; }
             .lightbox-nav-next { right: 10px; }
         }
 
-        @media (max-width: 560px) {
+        @media (max-width: 640px) {
+            .hero { padding: 100px 0 60px; }
+            .hero h1 { font-size: 2.6rem; }
+            .hero-img-wrap img { height: 240px; }
+            .hero-btns { max-width: 100%; }
+            .btn { padding: 12px 20px; font-size: 0.82rem; }
             .gallery { columns: 1; }
+            .reviews-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-title { font-size: 2rem; }
+            .services-desc { max-width: 100%; }
             .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+            .support-section { padding: 60px 0 80px; }
+        }
+
+        @media (max-width: 400px) {
+            .hero h1 { font-size: 2.2rem; }
+            .stat-num { font-size: 2.2rem; }
+            .stat-label { font-size: 0.7rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1047,8 +1193,101 @@
                 <img src="render12.jpg" alt="Парень у костра">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Парень у костра</span></div>
             </div>
+
+            <!-- Квадратный рендер (1:1) -->
+            <div class="gallery-item reveal" data-src="render13.jpg" data-caption="Вкусный малышочек">
+                <img src="render13.jpg" alt="Вкусный малышочек">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Вкусный малышочек</span></div>
+            </div>
+
+            <!-- Вертикальный рендер (portrait) -->
+            <div class="gallery-item reveal reveal-delay-1" data-src="render14.jpg" data-caption="Телефонный клоун">
+                <img src="render14.jpg" alt="Телефонный клоун">
+                <div class="gallery-overlay"><span class="gallery-overlay-text">Телефонный клоун</span></div>
+            </div>
         </div>
         </div><!-- /gallery-wrap -->
+        </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="reviews-section" id="reviews">
+        <div class="container">
+        <div class="section-header reveal" id="reviews-header">
+            <div class="section-dot"></div>
+            <button class="gallery-toggle" id="reviews-toggle" aria-expanded="true" aria-controls="reviews-wrap">
+                <h2 class="section-title">Отзывы</h2>
+                <span class="gallery-toggle-arrow" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </span>
+            </button>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="reviews-wrap" id="reviews-wrap">
+        <div class="reviews-grid">
+
+            <!-- ОТЗЫВ: Подводный мир -->
+            <div class="review-card reveal" data-render-src="render1.png" style="cursor:pointer;">
+                <img class="review-render" src="render1.png" alt="Подводный мир">
+                <div class="review-body">
+                    <div class="review-quote">Крутой рендер , особенно учитывая что первый опыт работы под водичкой вайбово , моя оценка 9/10 иб со светом было бы приятнее как по мне</div>
+                    <div class="review-footer">
+                        <div class="review-author">
+                            <span class="review-nick">𒆙 (@Drliska)</span>
+                            <span class="review-render-name">Подводный мир</span>
+                        </div>
+                        <div class="review-price-row">
+                            <span class="review-price-label">Цена</span>
+                            <span class="review-price-val">Бесплатно (Заказ года)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ОТЗЫВ: Вкусный малышочек -->
+            <div class="review-card reveal reveal-delay-1" data-render-src="render13.jpg" style="cursor:pointer;">
+                <img class="review-render" src="render13.jpg" alt="Вкусный малышочек">
+                <div class="review-body">
+                    <div class="review-quote">Как раз то что я и хотел, 8/10 - нечего добавить.</div>
+                    <div class="review-footer">
+                        <div class="review-author">
+                            <span class="review-nick">Аче (@kidnappKids)</span>
+                            <span class="review-render-name">Вкусный малышочек</span>
+                        </div>
+                        <div class="review-price-row">
+                            <span class="review-price-label">Цена</span>
+                            <span class="review-price-val">50 ₽ + 150 ₽ 🍵</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ДОБАВЛЯЙ НОВЫЕ ОТЗЫВЫ ПО ЭТОМУ ШАБЛОНУ:
+
+            <div class="review-card reveal" data-render-src="renderN.jpg" style="cursor:pointer;">
+                <img class="review-render" src="renderN.jpg" alt="Название рендера">
+                <div class="review-body">
+                    <div class="review-quote">Текст отзыва здесь</div>
+                    <div class="review-footer">
+                        <div class="review-author">
+                            <span class="review-nick">НикнеймКлиента</span>
+                            <span class="review-render-name">Название рендера</span>
+                        </div>
+                        <div class="review-price-row">
+                            <span class="review-price-label">Цена</span>
+                            <span class="review-price-val">XX ₽</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            -->
+
+        </div>
+        </div><!-- /reviews-wrap -->
         </div>
     </section>
 
@@ -1144,7 +1383,12 @@
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             if (e.isIntersecting) {
-                e.target.classList.add('visible');
+                // rAF гарантирует что браузер успел отрисовать opacity:0 перед переходом
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        e.target.classList.add('visible');
+                    });
+                });
                 observer.unobserve(e.target);
             }
         });
@@ -1299,6 +1543,38 @@
         const isCollapsed = galleryWrap.classList.toggle('collapsed');
         galleryToggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
         galleryHeader.classList.toggle('gallery-collapsed', isCollapsed);
+    });
+
+    // ─── REVIEWS TOGGLE ───
+    const reviewsToggleBtn = document.getElementById('reviews-toggle');
+    const reviewsWrap      = document.getElementById('reviews-wrap');
+    const reviewsHeader    = document.getElementById('reviews-header');
+
+    reviewsToggleBtn.addEventListener('click', () => {
+        const isCollapsed = reviewsWrap.classList.toggle('collapsed');
+        reviewsToggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
+        reviewsHeader.classList.toggle('reviews-collapsed', isCollapsed);
+    });
+
+    // ─── REVIEW CARD → GALLERY LINK ───
+    document.querySelectorAll('.review-card[data-render-src]').forEach(card => {
+        card.addEventListener('click', () => {
+            const src = card.dataset.renderSrc;
+            const targetIndex = items.findIndex(item => item.dataset.src === src);
+            if (targetIndex === -1) return;
+
+            // Если галерея свёрнута — раскрыть
+            if (galleryWrap.classList.contains('collapsed')) {
+                galleryWrap.classList.remove('collapsed');
+                galleryToggleBtn.setAttribute('aria-expanded', 'true');
+                galleryHeader.classList.remove('gallery-collapsed');
+            }
+
+            // Скролл к секции рендеров, потом открыть лайтбокс
+            const rendersSection = document.getElementById('renders');
+            rendersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => openLightbox(targetIndex), 500);
+        });
     });
 </script>
 
