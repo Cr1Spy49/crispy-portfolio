@@ -439,9 +439,64 @@
         /* ─── GALLERY ─── */
         .gallery-section { padding: 80px 0; }
 
+        .gallery-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .filter-pill {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 8px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .filter-pill-name {
+            line-height: 1.2;
+        }
+
+        .filter-pill-price {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.65;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-pill:hover {
+            border-color: var(--orange);
+            color: var(--text);
+        }
+
+        .filter-pill.active {
+            background: var(--orange);
+            border-color: var(--orange);
+            color: #fff;
+            box-shadow: 0 0 14px var(--orange-glow);
+        }
+
+        .filter-pill.active .filter-pill-price {
+            opacity: 0.85;
+        }
+
         .gallery {
             columns: 3;
             column-gap: 16px;
+        }
+
+        .gallery-item.filter-gone {
+            display: none;
         }
 
         .gallery-item {
@@ -1278,6 +1333,8 @@
             .hero-btns { max-width: 100%; }
             .btn { padding: 12px 20px; font-size: 0.82rem; }
             .gallery { columns: 1; }
+            .gallery-filters { gap: 8px; }
+            .filter-pill { padding: 7px 14px; font-size: 0.78rem; }
             .reviews-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .section-title { font-size: 2rem; }
@@ -1430,76 +1487,97 @@
         </div>
 
         <div class="gallery-wrap" id="gallery-wrap">
+        <div class="gallery-filters" id="gallery-filters" role="group" aria-label="Фильтр рендеров">
+            <button class="filter-pill active" data-filter="all">
+                <span class="filter-pill-name">Все</span>
+            </button>
+            <button class="filter-pill" data-filter="head-basic">
+                <span class="filter-pill-name">Голова без моделей</span>
+                <span class="filter-pill-price">от 30 ₽</span>
+            </button>
+            <button class="filter-pill" data-filter="head-models">
+                <span class="filter-pill-name">Голова с моделями</span>
+                <span class="filter-pill-price">от 50 ₽</span>
+            </button>
+            <button class="filter-pill" data-filter="medium">
+                <span class="filter-pill-name">Средний рендер</span>
+                <span class="filter-pill-price">от 80 ₽</span>
+            </button>
+            <button class="filter-pill" data-filter="big">
+                <span class="filter-pill-name">Большой рендер</span>
+                <span class="filter-pill-price">от 120 ₽</span>
+            </button>
+        </div>
         <div class="gallery" oncontextmenu="return false">
-            <div class="gallery-item reveal" data-src="render1.png" data-caption="Подводный мир">
+            <div class="gallery-item reveal" data-src="render1.png" data-caption="Подводный мир" data-category="big">
                 <img src="render1.png" alt="Подводный мир" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Подводный мир</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-1" data-src="render2.jpg" data-caption="Хэллоуин">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render2.jpg" data-caption="Хэллоуин" data-category="big">
                 <img src="render2.jpg" alt="Хэллоуин" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Хэллоуин</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2" data-src="render3.jpg" data-caption="День всех влюблённых">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render3.jpg" data-caption="День всех влюблённых" data-category="big">
                 <img src="render3.jpg" alt="День всех влюблённых" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">День всех влюблённых</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3" data-src="render4.jpg" data-caption="Крутой челик под деревом">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render4.jpg" data-caption="Крутой челик под деревом" data-category="medium">
                 <img src="render4.jpg" alt="Крутой челик под деревом" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Крутой челик под деревом</span></div>
             </div>
 
             <!-- Квадратные рендеры (1:1) -->
-            <div class="gallery-item reveal" data-src="render5.jpg" data-caption="Голова с шапкой">
+            <div class="gallery-item reveal" data-src="render5.jpg" data-caption="Голова с шапкой" data-category="head-models">
                 <img src="render5.jpg" alt="Голова с шапкой" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Голова с шапкой</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-1" data-src="render6.jpg" data-caption="Парень в очках">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render6.jpg" data-caption="Парень в очках" data-category="head-basic">
                 <img src="render6.jpg" alt="Парень в очках" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Парень в очках</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2" data-src="render7.jpg" data-caption="Медовая голова">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render7.jpg" data-caption="Медовая голова" data-category="head-basic">
                 <img src="render7.jpg" alt="Медовая голова" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Медовая голова</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3" data-src="render8.jpg" data-caption="Очень крутой парень">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render8.jpg" data-caption="Очень крутой парень" data-category="medium">
                 <img src="render8.jpg" alt="Очень крутой парень" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Очень крутой парень</span></div>
             </div>
 
             <!-- Вертикальный рендер (portrait) -->
-            <div class="gallery-item reveal" data-src="render9.jpg" data-caption="Холодный апокалипсис">
+            <div class="gallery-item reveal" data-src="render9.jpg" data-caption="Холодный апокалипсис" data-category="medium">
                 <img src="render9.jpg" alt="Холодный апокалипсис" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Холодный апокалипсис</span></div>
             </div>
 
             <!-- Стандартные горизонтальные (16:10) -->
-            <div class="gallery-item reveal reveal-delay-1" data-src="render10.jpg" data-caption="Данте и Вергилий">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render10.jpg" data-caption="Данте и Вергилий" data-category="medium">
                 <img src="render10.jpg" alt="Данте и Вергилий" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Данте и Вергилий</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2" data-src="render11.jpg" data-caption="Занудная учёба">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render11.jpg" data-caption="Занудная учёба" data-category="medium">
                 <img src="render11.jpg" alt="Занудная учёба" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Занудная учёба</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3" data-src="render12.jpg" data-caption="Парень у костра">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render12.jpg" data-caption="Парень у костра" data-category="big">
                 <img src="render12.jpg" alt="Парень у костра" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Парень у костра</span></div>
             </div>
 
             <!-- Квадратный рендер (1:1) -->
-            <div class="gallery-item reveal" data-src="render13.jpg" data-caption="Вкусный малышочек">
+            <div class="gallery-item reveal" data-src="render13.jpg" data-caption="Вкусный малышочек" data-category="head-models">
                 <img src="render13.jpg" alt="Вкусный малышочек" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Вкусный малышочек</span></div>
             </div>
 
             <!-- Вертикальный рендер (portrait) -->
-            <div class="gallery-item reveal reveal-delay-1" data-src="render14.jpg" data-caption="Телефонный клоун">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render14.jpg" data-caption="Телефонный клоун" data-category="none">
                 <img src="render14.jpg" alt="Телефонный клоун" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Телефонный клоун</span></div>
             </div>
 
             <!-- Квадратный рендер (1:1) -->
-            <div class="gallery-item reveal reveal-delay-2" data-src="render15.jpg" data-caption="Страшный бро">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render15.jpg" data-caption="Страшный бро" data-category="big">
                 <img src="render15.jpg" alt="Страшный бро" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Страшный бро</span></div>
             </div>
@@ -1773,6 +1851,55 @@
     if (rendersCountEl) {
         rendersCountEl.textContent = galleryItems.length + '+';
     }
+
+    // ─── ФИЛЬТР ГАЛЕРЕИ ───
+    // Стратегия: сначала гасим ВСЕ карточки в 0, и только когда они невидимы —
+    // перестраиваем состав (display none/block). Так смена колонок-masonry
+    // происходит "за кадром", пользователь не видит скачков верстки.
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const FILTER_FADE_MS = 250;
+
+    filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            const filter = pill.dataset.filter;
+            if (pill.classList.contains('active')) return;
+
+            filterPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+
+            // 1. Затемняем вообще все карточки разом
+            galleryItems.forEach(item => {
+                item.style.transition = 'opacity ' + FILTER_FADE_MS + 'ms ease';
+                item.style.opacity = '0';
+                item.style.pointerEvents = 'none';
+            });
+
+            // 2. Когда всё уже невидимо — меняем состав (display) и высветляем нужные
+            setTimeout(() => {
+                galleryItems.forEach(item => {
+                    const matches = filter === 'all' || item.dataset.category === filter;
+                    if (matches) {
+                        item.classList.remove('filter-gone');
+                    } else {
+                        item.classList.add('filter-gone');
+                    }
+                });
+
+                // даём браузеру кадр применить display, потом высветляем совпавшие
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        galleryItems.forEach(item => {
+                            const matches = filter === 'all' || item.dataset.category === filter;
+                            if (matches) {
+                                item.style.opacity = '1';
+                                item.style.pointerEvents = '';
+                            }
+                        });
+                    });
+                });
+            }, FILTER_FADE_MS);
+        });
+    });
 
     const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(e => {
