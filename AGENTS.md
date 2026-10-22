@@ -9,6 +9,7 @@
 - Treat reference portfolios as inspiration for individual details; adapt them to the current design.
 - Keep the static site simple: HTML, inline CSS/JavaScript, local assets, no mandatory build step.
 - Keep original artwork intact. Generate optimized previews separately.
+- Preserve transparency in previews even for PNG uploads named .jpg. Zoom around the focal point and keep the displayed image visible while its original loads.
 - Use the existing checkout; do not create a worktree unless requested.
 - Preserve the CRLF line endings in `index.html`; use Git's `cr-at-eol` whitespace option when checking it.
 - Browser checks: `python3 tools/smoke_test.py` (optional Playwright + Chromium development tooling).

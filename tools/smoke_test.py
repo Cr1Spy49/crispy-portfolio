@@ -120,6 +120,7 @@ class PortfolioChecks(unittest.TestCase):
         self.page.on('request', lambda r: originals.append(r.url) if r.url.endswith('/render1.png') else None)
         self.open()
         self.assertEqual(originals, [])
+        fitted = self.page.locator('#lb-img').bounding_box()
         self.page.locator('#lb-zoom').click()
         expect(self.page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'true')
         expect(self.page.locator('#lb-img')).to_have_attribute('src', 'render1.png')
@@ -127,7 +128,10 @@ class PortfolioChecks(unittest.TestCase):
         self.assertEqual(len(originals), 1)
         self.page.locator('#lb-zoom').click()
         expect(self.page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'false')
-        expect(self.page.locator('#lb-img')).to_have_attribute('src', 'media/previews/render1-1600.webp')
+        self.page.wait_for_function("width=>Math.abs(document.querySelector('#lb-img').getBoundingClientRect().width-width)<2", arg=fitted['width'])
+        # Keep the decoded original when fitting again; no blank reload or extra download.
+        expect(self.page.locator('#lb-img')).to_have_attribute('src', 'render1.png')
+        self.assertEqual(len(originals), 1)
 
     def test_06_focus_keyboard_open_escape_and_restore(self):
         card = self.page.locator('.gallery-item').first
@@ -328,6 +332,90 @@ class PortfolioChecks(unittest.TestCase):
         self.page.reload(wait_until='networkidle')
         self.page.locator('#street-motion-toggle').click()
         expect(self.page.locator('#street-motion-toggle')).to_have_attribute('aria-pressed', 'true')
+
+    def test_22_transparent_artwork_keeps_alpha_in_all_previews(self):
+        result = self.page.evaluate("""async () => {
+            const result = [];
+            for (const width of [480, 960, 1600]) {
+                const image = new Image();
+                image.src = `media/previews/render13-${width}.webp?v=alpha-1`;
+                await image.decode();
+                const canvas = document.createElement('canvas');
+                canvas.width = canvas.height = width;
+                const context = canvas.getContext('2d');
+                context.drawImage(image, 0, 0);
+                result.push(context.getImageData(0, 0, 1, 1).data[3]);
+            }
+            return result;
+        }""")
+        self.assertEqual(result, [0, 0, 0])
+        expect(self.page.locator('.gallery-item[data-src="render13.jpg"] img')).to_have_attribute('src', 'media/previews/render13-480.webp?v=alpha-1')
+
+    def test_23_zoom_preserves_focal_point_and_supports_drag_and_wheel(self):
+        self.open(12)
+        image = self.page.locator('#lb-img')
+        fit = image.bounding_box()
+        point = (fit['x'] + fit['width'] * .4, fit['y'] + fit['height'] * .45)
+        self.page.mouse.dblclick(*point)
+        self.page.wait_for_function("width=>Math.abs(document.querySelector('#lb-img').getBoundingClientRect().width-width*2)<2", arg=fit['width'])
+        enlarged = image.bounding_box()
+        self.assertAlmostEqual(enlarged['x'] + enlarged['width'] * .4, point[0], delta=2)
+        self.assertAlmostEqual(enlarged['y'] + enlarged['height'] * .45, point[1], delta=2)
+        stage = self.page.locator('#lb-viewport').bounding_box()
+        x, y = stage['x'] + stage['width'] / 2, stage['y'] + stage['height'] / 2
+        self.page.mouse.move(x, y)
+        self.page.mouse.down()
+        self.page.mouse.move(x + 70, y + 70, steps=8)
+        self.page.mouse.up()
+        self.assertGreater(image.bounding_box()['y'], enlarged['y'] + 50)
+        self.page.mouse.wheel(0, -200)
+        self.page.wait_for_function("width=>document.querySelector('#lb-img').getBoundingClientRect().width>width*2.5", arg=fit['width'])
+        self.page.mouse.wheel(0, 10000)
+        expect(self.page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'false')
+        self.page.wait_for_function("width=>Math.abs(document.querySelector('#lb-img').getBoundingClientRect().width-width)<2", arg=fit['width'])
+
+    def test_24_delayed_original_cannot_replace_next_render(self):
+        held = []
+        self.page.route('**/render13.jpg', lambda route: held.append(route))
+        self.open(12)
+        with self.page.expect_request('**/render13.jpg'):
+            self.page.locator('#lb-zoom').click()
+        self.page.locator('#lb-next').click()
+        expect(self.page.locator('#lb-img')).to_have_attribute('src', 'media/previews/render14-1600.webp')
+        self.assertEqual(len(held), 1)
+        held[0].fulfill(path=str(ROOT/'render13.jpg'), content_type='image/png')
+        self.page.wait_for_load_state('networkidle')
+        expect(self.page.locator('#lb-img')).to_have_attribute('src', 'media/previews/render14-1600.webp')
+        expect(self.page.locator('#lb-counter')).to_have_text('14 / 15')
+        expect(self.page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'false')
+
+    def test_25_real_touch_pinch_zooms_image_without_changing_render(self):
+        context = self.browser.new_context(viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)
+        try:
+            page = context.new_page()
+            page.on('pageerror', lambda error: self.errors.append(str(error)))
+            page.goto(self.base, wait_until='networkidle')
+            page.locator('.gallery-item[data-src="render13.jpg"]').click()
+            page.wait_for_function('document.querySelector("#lb-img").complete && document.querySelector("#lb-img").naturalWidth>0')
+            box = page.locator('#lb-viewport').bounding_box()
+            cx, cy = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+            session = context.new_cdp_session(page)
+            def fingers(distance):
+                return [{'x': cx-distance, 'y': cy, 'id': 1}, {'x': cx+distance, 'y': cy, 'id': 2}]
+            session.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': fingers(40)})
+            for distance in [50, 60, 70, 80]:
+                session.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': fingers(distance)})
+            session.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+            expect(page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'true')
+            expect(page.locator('#lb-counter')).to_have_text('13 / 15')
+            session.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': fingers(80)})
+            for distance in [70, 60, 50, 40]:
+                session.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': fingers(distance)})
+            session.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+            expect(page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'false')
+            expect(page.locator('#lb-caption')).to_have_text('Вкусный малышочек')
+        finally:
+            context.close()
 
 
 if __name__ == '__main__':

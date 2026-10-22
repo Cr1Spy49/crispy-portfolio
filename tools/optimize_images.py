@@ -17,7 +17,12 @@ def main():
     total = 0
     for source in originals:
         with Image.open(source) as original:
-            image = ImageOps.exif_transpose(original).convert("RGB")
+            image = ImageOps.exif_transpose(original)
+            # Some .jpg uploads are PNGs. Dropping alpha exposes hidden edge
+            # colors, creating a pale outline around transparent artwork.
+            has_alpha = ('A' in image.getbands() and image.getchannel('A').getextrema()[0] < 255)
+            has_alpha |= 'transparency' in image.info
+            image = image.convert("RGBA" if has_alpha else "RGB")
             widths = (480, 960) if source.stem == "main_art" else (480, 960, 1600)
             for width in widths:
                 preview = image.copy()

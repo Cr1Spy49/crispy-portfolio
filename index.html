@@ -1426,19 +1426,19 @@
                 linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 24px 24px,
                 linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 24px 24px,
                 var(--bg-card);
-            touch-action: pan-y;
+            touch-action: none;
         }
         .lightbox-viewport .lightbox-img {
             width: auto; height: auto; max-width: 100%; max-height: 100%;
             object-fit: contain; border: 0; border-radius: 0; box-shadow: none;
             transform: none; translate: none; will-change: auto;
-            transition: opacity .15s; cursor: zoom-in; user-select: none;
+            flex-shrink: 0; transform-origin: center;
+            transition: opacity .15s, transform .22s var(--street-ease); user-select: none;
         }
         .lightbox-viewport.loading .lightbox-img { opacity: 0; }
-        .lightbox-viewport.zoomed { display: block; overflow: auto; touch-action: auto; overscroll-behavior: contain; }
-        .lightbox-viewport.zoomed .lightbox-img {
-            width: var(--original-width); max-width: none; max-height: none; height: auto; cursor: zoom-out;
-        }
+        .lightbox-viewport.zoomed { cursor: grab; }
+        .lightbox-viewport.is-dragging { cursor: grabbing; }
+        .lightbox-viewport.is-interacting .lightbox-img { transition: opacity .15s; }
         .lightbox-feedback {
             position: absolute; inset: 0; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 10px;
@@ -1947,7 +1947,7 @@
 
             <!-- Квадратный рендер (1:1) -->
             <div class="gallery-item reveal" data-src="render13.jpg" data-caption="Вкусный малышочек" data-category="head-models" role="button" tabindex="0" aria-label="Открыть рендер: Вкусный малышочек">
-                <img src="media/previews/render13-480.webp" srcset="media/previews/render13-480.webp 480w, media/previews/render13-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Вкусный малышочек" loading="lazy" decoding="async">
+                <img src="media/previews/render13-480.webp?v=alpha-1" srcset="media/previews/render13-480.webp?v=alpha-1 480w, media/previews/render13-960.webp?v=alpha-1 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Вкусный малышочек" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Вкусный малышочек</span></div>
             </div>
 
@@ -2006,7 +2006,7 @@
 
             <!-- ОТЗЫВ: Вкусный малышочек -->
             <div class="review-card reveal reveal-delay-1" data-render-src="render13.jpg" style="cursor:pointer;">
-                <img class="review-render" src="media/previews/render13-480.webp" srcset="media/previews/render13-480.webp 480w, media/previews/render13-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Вкусный малышочек" loading="lazy" decoding="async">
+                <img class="review-render" src="media/previews/render13-480.webp?v=alpha-1" srcset="media/previews/render13-480.webp?v=alpha-1 480w, media/previews/render13-960.webp?v=alpha-1 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Вкусный малышочек" loading="lazy" decoding="async">
                 <div class="review-body">
                     <div class="review-quote">Как раз то что я и хотел, 8/10 - нечего добавить.</div>
                     <div class="review-footer">
@@ -2158,7 +2158,7 @@
     </div>
     <div class="lightbox-footer"><div class="lightbox-caption" id="lb-caption"></div><span class="lightbox-counter" id="lb-counter" aria-live="polite"></span><a class="lightbox-order" id="lb-order" href="https://t.me/Yappy_CriSpy" target="_blank" rel="noopener noreferrer">Заказать похожий рендер ↗</a></div>
     <div class="lightbox-thumbs" id="lb-thumbs" role="group" aria-label="Работы выбранной категории"></div>
-    <p class="lightbox-hint">← → — листать · Esc — закрыть · двойной клик — увеличить · свайп на телефоне</p>
+    <p class="lightbox-hint">← → — листать · Esc — закрыть · двойной клик / колесо — масштаб · перетаскивай, чтобы двигать · на телефоне — щипок и свайп</p>
 </dialog>
 
 <!-- FOOTER -->
@@ -2343,10 +2343,15 @@
     let returnFocus = null;
     let previousOverflow = '';
     let zoomed = false;
+    let viewScale = 1, viewX = 0, viewY = 0, fitWidth = 0, fitHeight = 0;
+    let imageWidth = 0, imageHeight = 0, imageVersion = 0, detailRequested = false;
+    const pointers = new Map();
+    let pinch = null, drag = null, wheelTimer;
     let feedbackTimer;
 
     function previewPath(item, width = 1600) {
-        return `media/previews/${item.dataset.src.replace(/\.[^.]+$/, '')}-${width}.webp`;
+        const stem = item.dataset.src.replace(/\.[^.]+$/, '');
+        return `media/previews/${stem}-${width}.webp${stem === 'render13' ? '?v=alpha-1' : ''}`;
     }
 
     function hideFeedback() {
@@ -2369,23 +2374,80 @@
         }
     }
 
+    function renderView() {
+        const limitX = Math.max(0, (fitWidth * viewScale - lbViewport.clientWidth) / 2);
+        const limitY = Math.max(0, (fitHeight * viewScale - lbViewport.clientHeight) / 2);
+        viewX = Math.max(-limitX, Math.min(limitX, viewX));
+        viewY = Math.max(-limitY, Math.min(limitY, viewY));
+        zoomed = viewScale > 1.01;
+        lbImg.style.transform = `translate3d(${viewX}px, ${viewY}px, 0) scale(${viewScale})`;
+        lbViewport.classList.toggle('zoomed', zoomed);
+        lbZoom.setAttribute('aria-pressed', String(zoomed));
+        lbZoom.setAttribute('aria-label', zoomed ? 'Уместить изображение' : 'Увеличить изображение');
+        lbZoom.querySelector('.tool-label').textContent = zoomed ? 'Уместить' : 'Увеличить';
+    }
+
+    function layoutImage() {
+        if (!lightbox.open || !imageWidth || !imageHeight) return;
+        const fit = Math.min(lbViewport.clientWidth / imageWidth, lbViewport.clientHeight / imageHeight, 1);
+        const width = imageWidth * fit, height = imageHeight * fit;
+        if (fitWidth) viewX *= width / fitWidth;
+        if (fitHeight) viewY *= height / fitHeight;
+        fitWidth = width; fitHeight = height;
+        lbImg.style.width = `${width}px`;
+        lbImg.style.height = `${height}px`;
+        renderView();
+    }
+
+    function endGesture() {
+        pointers.forEach((_, id) => { if (lbViewport.hasPointerCapture(id)) lbViewport.releasePointerCapture(id); });
+        pointers.clear();
+        pinch = drag = null;
+        clearTimeout(wheelTimer);
+        lbViewport.classList.remove('is-dragging', 'is-interacting');
+    }
+
     function resetZoom() {
-        zoomed = false;
-        lbViewport.classList.remove('zoomed');
-        lbZoom.setAttribute('aria-pressed', 'false');
-        lbZoom.setAttribute('aria-label', 'Увеличить изображение');
-        lbZoom.querySelector('.tool-label').textContent = 'Увеличить';
-        lbViewport.scrollTo(0, 0);
+        endGesture();
+        viewScale = 1; viewX = viewY = 0;
+        renderView();
+    }
+
+    function requestDetail() {
+        if (detailRequested || !lightbox.open) return;
+        detailRequested = true;
+        const version = imageVersion;
+        const source = collection[currentIndex].dataset.src;
+        const detail = new Image();
+        detail.onload = async () => {
+            try { await detail.decode(); } catch (_) { /* A loaded image can still render without decode(). */ }
+            if (version === imageVersion && lightbox.open) lbImg.src = source;
+        };
+        detail.onerror = () => { if (version === imageVersion) detailRequested = false; };
+        detail.src = source;
+    }
+
+    function zoomAt(scale, clientX, clientY) {
+        const box = lbViewport.getBoundingClientRect();
+        const x = (clientX ?? box.left + box.width / 2) - box.left - box.width / 2;
+        const y = (clientY ?? box.top + box.height / 2) - box.top - box.height / 2;
+        const next = Math.max(1, Math.min(4, scale));
+        viewX = x - (x - viewX) * next / viewScale;
+        viewY = y - (y - viewY) * next / viewScale;
+        viewScale = next;
+        renderView();
+        if (zoomed) requestDetail();
     }
 
     function setImage() {
         const item = collection[currentIndex];
         const original = item.querySelector('img');
+        imageVersion++;
+        detailRequested = false;
         resetZoom();
         lbImg.alt = item.dataset.caption;
-        lbImg.width = Number(original.getAttribute('width'));
-        lbImg.height = Number(original.getAttribute('height'));
-        lbViewport.style.setProperty('--original-width', `${lbImg.width}px`);
+        imageWidth = lbImg.width = Number(original.getAttribute('width'));
+        imageHeight = lbImg.height = Number(original.getAttribute('height'));
         lbCaption.textContent = item.dataset.caption;
         lbCounter.textContent = `${currentIndex + 1} / ${collection.length}`;
         document.getElementById('lb-category').textContent = categoryLabels[item.dataset.category] || 'Рендер';
@@ -2399,6 +2461,7 @@
         const active = lbThumbs.children[currentIndex];
         if (active && lightbox.open) active.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
         loadImage(previewPath(item));
+        layoutImage();
     }
 
     function buildThumbs() {
@@ -2438,6 +2501,7 @@
         buildThumbs();
         setImage();
         if (!lightbox.open) lightbox.showModal();
+        layoutImage();
         document.body.style.overflow = 'hidden';
         lightbox.classList.add('active');
         lbClose.focus({ preventScroll: true });
@@ -2450,14 +2514,8 @@
         setImage();
     }
 
-    function toggleZoom() {
-        zoomed = !zoomed;
-        lbViewport.classList.toggle('zoomed', zoomed);
-        lbZoom.setAttribute('aria-pressed', String(zoomed));
-        lbZoom.setAttribute('aria-label', zoomed ? 'Уместить изображение' : 'Увеличить изображение');
-        lbZoom.querySelector('.tool-label').textContent = zoomed ? 'Уместить' : 'Увеличить';
-        lbViewport.scrollTo(0, 0);
-        loadImage(zoomed ? collection[currentIndex].dataset.src : previewPath(collection[currentIndex]));
+    function toggleZoom(point) {
+        zoomAt(zoomed ? 1 : 2, point?.clientX, point?.clientY);
     }
 
     lbImg.addEventListener('load', () => { lbViewport.classList.remove('loading'); hideFeedback(); });
@@ -2482,10 +2540,11 @@
     lbClose.addEventListener('click', closeLightbox);
     lbPrev.addEventListener('click', () => navigate(-1));
     lbNext.addEventListener('click', () => navigate(1));
-    lbZoom.addEventListener('click', toggleZoom);
-    lbImg.addEventListener('dblclick', toggleZoom);
+    lbZoom.addEventListener('click', () => toggleZoom());
+    lbViewport.addEventListener('dblclick', event => { event.preventDefault(); toggleZoom(event); });
     lightbox.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
     lightbox.addEventListener('close', () => {
+        imageVersion++;
         hideFeedback(); resetZoom();
         lightbox.classList.remove('active');
         document.body.style.overflow = previousOverflow;
@@ -2506,6 +2565,64 @@
             else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
         }
     });
+    // Pan in image coordinates; pinch and wheel keep the point under the pointer fixed.
+    lbViewport.addEventListener('wheel', event => {
+        event.preventDefault();
+        lbViewport.classList.add('is-interacting');
+        zoomAt(viewScale * Math.exp(-event.deltaY * .002), event.clientX, event.clientY);
+        clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => { if (!pointers.size) lbViewport.classList.remove('is-interacting'); }, 140);
+    }, { passive: false });
+    lbViewport.addEventListener('pointerdown', event => {
+        if (event.button !== 0 || event.target.closest('a')) return;
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        lbViewport.setPointerCapture(event.pointerId);
+        lbViewport.classList.add('is-interacting');
+        if (pointers.size === 2) {
+            const [a, b] = Array.from(pointers.values());
+            const box = lbViewport.getBoundingClientRect();
+            pinch = {
+                distance: Math.max(1, Math.hypot(b.x - a.x, b.y - a.y)), scale: viewScale,
+                x: ((a.x + b.x) / 2 - box.left - box.width / 2 - viewX) / viewScale,
+                y: ((a.y + b.y) / 2 - box.top - box.height / 2 - viewY) / viewScale
+            };
+            touchStart = null;
+            drag = null;
+        } else if (pointers.size === 1 && zoomed) {
+            drag = { x: event.clientX, y: event.clientY, panX: viewX, panY: viewY };
+            lbViewport.classList.add('is-dragging');
+        }
+    });
+    lbViewport.addEventListener('pointermove', event => {
+        if (!pointers.has(event.pointerId)) return;
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        if (pointers.size === 2 && pinch) {
+            const [a, b] = Array.from(pointers.values());
+            const box = lbViewport.getBoundingClientRect();
+            viewScale = Math.max(1, Math.min(4, pinch.scale * Math.hypot(b.x - a.x, b.y - a.y) / pinch.distance));
+            viewX = (a.x + b.x) / 2 - box.left - box.width / 2 - pinch.x * viewScale;
+            viewY = (a.y + b.y) / 2 - box.top - box.height / 2 - pinch.y * viewScale;
+            renderView();
+            if (zoomed) requestDetail();
+        } else if (pointers.size === 1 && drag && zoomed) {
+            viewX = drag.panX + event.clientX - drag.x;
+            viewY = drag.panY + event.clientY - drag.y;
+            renderView();
+        }
+    });
+    function releasePointer(event) {
+        if (!pointers.delete(event.pointerId)) return;
+        pinch = drag = null;
+        if (pointers.size === 1 && zoomed) {
+            const point = Array.from(pointers.values())[0];
+            drag = { x: point.x, y: point.y, panX: viewX, panY: viewY };
+        }
+        if (!pointers.size) lbViewport.classList.remove('is-interacting', 'is-dragging');
+    }
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => lbViewport.addEventListener(type, releasePointer));
+    if ('ResizeObserver' in window) new ResizeObserver(layoutImage).observe(lbViewport);
+    else window.addEventListener('resize', layoutImage);
+
     let touchStart = null;
     lbViewport.addEventListener('touchstart', event => {
         touchStart = !zoomed && event.touches.length === 1
