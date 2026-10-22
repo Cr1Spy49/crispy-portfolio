@@ -8,6 +8,7 @@
 - Make small, targeted improvements. A replacement theme or broad redesign requires an explicit request.
 - Treat reference portfolios as inspiration for individual details; adapt them to the current design.
 - Keep the static site simple: HTML, inline CSS/JavaScript, local assets, no mandatory build step.
+- Keep Russian as the default and the saved RU/EN switch available in the mobile header. Translate page content and dynamic viewer/menu labels together; preserve commission prices.
 - Keep original artwork intact. Generate optimized previews separately.
 - Preserve transparency in previews even for PNG uploads named .jpg. Zoom around the focal point and keep the displayed image visible while its original loads.
 - Use the existing checkout; do not create a worktree unless requested.

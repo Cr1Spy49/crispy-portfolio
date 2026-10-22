@@ -417,6 +417,97 @@ class PortfolioChecks(unittest.TestCase):
         finally:
             context.close()
 
+    def test_26_language_switch_translates_page_and_persists(self):
+        toggle = self.page.locator('#language-toggle')
+        expect(toggle).to_have_accessible_name('Switch to English')
+        toggle.click()
+        expect(self.page.locator('html')).to_have_attribute('lang', 'en')
+        expect(self.page.locator('.hero h1')).to_have_text("Hey,I'm CriSpy!")
+        expect(self.page.locator('#contact')).to_have_text('Contact me')
+        expect(self.page.locator('.service-name').first).to_have_text('Head render (no extra models)')
+        expect(self.page.locator('.review-quote').nth(1)).to_have_text('Exactly what I wanted, 8/10 — nothing to add.')
+        self.assertNotRegex(self.page.locator('body').inner_text(), '[А-Яа-яЁё]')
+        self.assertTrue(self.page.locator('meta[name="description"]').get_attribute('content').startswith('CriSpy — Minecraft renders'))
+        self.page.reload(wait_until='networkidle')
+        expect(self.page.locator('html')).to_have_attribute('lang', 'en')
+        expect(toggle).to_have_accessible_name('Переключить на русский')
+        toggle.click()
+        expect(self.page.locator('html')).to_have_attribute('lang', 'ru')
+        expect(self.page.locator('.hero h1')).to_have_text('Привет,Я Криспи!')
+        self.page.reload(wait_until='networkidle')
+        expect(self.page.locator('html')).to_have_attribute('lang', 'ru')
+
+    def test_27_english_viewer_labels_order_message_and_live_state(self):
+        self.page.locator('#language-toggle').click()
+        self.filter('head-basic', 2)
+        self.open()
+        expect(self.page.locator('#lb-caption')).to_have_text('Guy with Glasses')
+        expect(self.page.locator('#lb-category')).to_have_text('Head without models')
+        expect(self.page.locator('.lightbox-thumb').first).to_have_accessible_name('Show: Guy with Glasses')
+        self.page.locator('#lb-next').click()
+        expect(self.page.locator('#lb-caption')).to_have_text('Honey Head')
+        expect(self.page.locator('#lb-counter')).to_have_text('2 / 2')
+        message = parse_qs(urlparse(self.page.locator('#lb-order').get_attribute('href')).query)['text'][0]
+        self.assertEqual(message, 'Hi! I’d like to discuss a render in the style of “Honey Head”.')
+        self.page.locator('#lb-zoom').click()
+        expect(self.page.locator('#lb-zoom')).to_have_accessible_name('Fit image to view')
+        expect(self.page.locator('#lb-zoom .tool-label')).to_have_text('Fit to view')
+        # Translating an already open viewer must not reset its zoom or selection.
+        self.page.locator('#language-toggle').evaluate('element=>element.click()')
+        expect(self.page.locator('#lb-caption')).to_have_text('Медовая голова')
+        expect(self.page.locator('#lb-counter')).to_have_text('2 / 2')
+        expect(self.page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'true')
+        expect(self.page.locator('#lb-zoom')).to_have_accessible_name('Уместить изображение')
+        self.page.keyboard.press('Escape')
+        expect(self.page.locator('[data-filter="head-basic"]')).to_have_attribute('aria-pressed', 'true')
+
+    def test_28_english_viewer_error_and_motion_states_are_translated(self):
+        self.page.locator('#language-toggle').click()
+        toggle = self.page.locator('#street-motion-toggle')
+        toggle.click()
+        expect(toggle).to_have_accessible_name('Resume background animation')
+        expect(toggle.locator('span')).to_have_text('Resume background')
+        self.page.route('**/render1-1600.webp', lambda route: route.abort())
+        self.page.locator('.gallery-item').first.click()
+        expect(self.page.locator('#lb-feedback')).to_contain_text('Could not load the image.')
+        expect(self.page.locator('#lb-feedback a')).to_have_text('Open original')
+        self.page.keyboard.press('ArrowRight')
+        expect(self.page.locator('#lb-caption')).to_have_text('Halloween')
+        self.page.wait_for_function('document.querySelector("#lb-img").complete && document.querySelector("#lb-img").naturalWidth>0')
+        expect(self.page.locator('#lb-feedback')).not_to_be_visible()
+
+    def test_29_language_control_fits_mobile_and_keeps_menu_state(self):
+        self.page.locator('#language-toggle').click()
+        for width in [320, 360, 390, 640, 900, 902, 1024, 1440]:
+            self.page.set_viewport_size({'width': width, 'height': 844})
+            brand = self.page.locator('.graffiti-brand').bounding_box()
+            toggle = self.page.locator('#language-toggle').bounding_box()
+            self.assertLessEqual(brand['x'] + brand['width'], toggle['x'])
+            self.assertLessEqual(toggle['x'] + toggle['width'], width)
+            self.assertFalse(self.page.evaluate('document.documentElement.scrollWidth>innerWidth'), width)
+            if width <= 900:
+                burger = self.page.locator('#burger').bounding_box()
+                self.assertLessEqual(toggle['x'] + toggle['width'], burger['x'])
+        self.page.set_viewport_size({'width': 320, 'height': 568})
+        self.page.locator('#burger').click()
+        expect(self.page.locator('#burger')).to_have_accessible_name('Close menu')
+        expect(self.page.locator('#mobile-nav a[href="#services"]')).to_have_text('Services')
+        self.page.locator('#language-toggle').click()
+        expect(self.page.locator('#burger')).to_have_attribute('aria-expanded', 'true')
+        expect(self.page.locator('#burger')).to_have_accessible_name('Закрыть меню')
+        expect(self.page.locator('#mobile-nav a[href="#services"]')).to_have_text('Услуги')
+        self.page.locator('#mobile-nav a[href="#services"]').click()
+        expect(self.page.locator('#burger')).to_have_attribute('aria-expanded', 'false')
+
+    def test_30_language_switch_works_without_preference_storage(self):
+        self.page.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw Error('blocked')}})")
+        self.page.reload(wait_until='networkidle')
+        self.page.locator('#language-toggle').click()
+        expect(self.page.locator('html')).to_have_attribute('lang', 'en')
+        expect(self.page.locator('.hero h1')).to_have_text("Hey,I'm CriSpy!")
+        self.page.locator('#language-toggle').click()
+        expect(self.page.locator('html')).to_have_attribute('lang', 'ru')
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
