@@ -301,13 +301,13 @@
             background: var(--tg);
             color: #fff;
         }
-        .btn-tg:hover { background: #1c9be0; box-shadow: 0 0 16px rgba(42,171,238,0.4); }
+        .btn-tg:hover { box-shadow: 0 0 16px rgba(42,171,238,0.4); }
 
         .btn-orange {
             background: var(--orange);
             color: #fff;
         }
-        .btn-orange:hover { background: #e05d00; box-shadow: 0 0 16px var(--orange-glow); }
+        .btn-orange:hover { box-shadow: 0 0 16px var(--orange-glow); }
 
         .hero-note {
             font-size: 0.78rem;
@@ -1445,9 +1445,10 @@
             text-align: center; padding: 24px; font-size: .85rem; color: var(--muted); pointer-events: none;
         }
         .lightbox-feedback a { color: var(--orange); pointer-events: auto; }
-        .lightbox-footer .lightbox-caption { font-size: .8rem; letter-spacing: 1px; overflow-wrap: anywhere; }
-        .lightbox-footer .lightbox-counter { position: static; transform: none; font-size: .75rem; flex-shrink: 0; }
-        .lightbox-order { color: var(--orange); font-size: .75rem; text-decoration: none; white-space: nowrap; }
+        .lightbox-footer { display: grid; grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr); }
+        .lightbox-footer .lightbox-caption { min-width: 0; font-size: .8rem; letter-spacing: 1px; overflow-wrap: anywhere; }
+        .lightbox-footer .lightbox-counter { position: static; transform: none; inline-size: 100%; font-size: .75rem; text-align: center; font-variant-numeric: tabular-nums; }
+        .lightbox-order { justify-self: end; color: var(--orange); font-size: .75rem; text-decoration: none; white-space: nowrap; }
         .lightbox-order:hover { text-decoration: underline; }
         .lightbox-thumbs {
             display: flex; gap: 8px; width: min(1200px, 100%); margin-inline: auto;
@@ -1499,9 +1500,8 @@
             .lightbox-stage .lightbox-nav-prev { left: 6px; }
             .lightbox-stage .lightbox-nav-next { right: 6px; }
             .lightbox-stage:has(.zoomed) .lightbox-nav { display: none; }
-            .lightbox-footer { flex-wrap: wrap; gap: 6px 14px; }
-            .lightbox-caption { flex: 1 1 180px; }
-            .lightbox-order { flex-basis: 100%; text-align: center; font-size: .7rem; }
+            .lightbox-footer { grid-template-columns: minmax(0, 1fr) 4rem; grid-template-rows: minmax(2.6rem, auto) auto; gap: 6px 14px; }
+            .lightbox-order { grid-column: 1 / -1; justify-self: center; text-align: center; font-size: .7rem; }
             .lightbox-thumb { width: 54px; height: 49px; flex-basis: 54px; }
             .lightbox-hint { font-size: .6rem; }
         }
@@ -1509,8 +1509,6 @@
             dialog.lightbox { gap: 6px; padding-block: 8px; }
             .lightbox-thumbs { display: none; }
             .lightbox-hint { display: none; }
-            .lightbox-footer { flex-wrap: nowrap; }
-            .lightbox-order { flex-basis: auto; }
         }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
@@ -1570,13 +1568,13 @@
 
         /* Familiar buttons, softer edges, a small marker-like underline. */
         .btn, .nav-cta, .btn-support, .filter-pill, .soft-icon, .burger {
-            transition: transform .32s var(--street-ease), background .32s ease, border-color .32s ease, color .32s ease, box-shadow .32s ease;
+            transition: transform .32s var(--street-ease), background-color .32s ease, border-color .32s ease, color .32s ease, box-shadow .32s ease, filter .32s ease;
         }
         .btn { padding: 12px 20px; border-radius: 12px 9px 12px 9px; font-size: .82rem; letter-spacing: .65px; border: 1px solid rgba(255,255,255,.12); }
-        .btn-orange { color: #211006; background: linear-gradient(135deg, #ff863d, var(--orange)); box-shadow: 0 3px 0 rgba(164,62,9,.3); }
-        .btn-tg { color: #061720; background: linear-gradient(135deg, #5fc6f3, var(--tg)); box-shadow: 0 3px 0 rgba(23,103,144,.25); }
-        .btn-orange:hover { color: #211006; background: #ff8c47; }
-        .btn-tg:hover { color: #061720; background: #70cff7; }
+        .btn-orange { color: #211006; background: var(--orange) linear-gradient(135deg, #ff863d, var(--orange)); box-shadow: 0 3px 0 rgba(164,62,9,.3); }
+        .btn-tg { color: #061720; background: var(--tg) linear-gradient(135deg, #5fc6f3, var(--tg)); box-shadow: 0 3px 0 rgba(23,103,144,.25); }
+        .btn-orange:hover { color: #211006; filter: brightness(1.06); }
+        .btn-tg:hover { color: #061720; filter: brightness(1.06); }
         .btn:hover, .nav-cta:hover, .btn-support:hover { transform: translateY(-2px); }
         .btn:active, .nav-cta:active, .btn-support:active { transform: translateY(0); }
         .nav-links .nav-cta { color: #211006 !important; border-radius: 10px 7px 10px 7px; padding: 9px 20px; }
