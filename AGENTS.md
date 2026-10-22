@@ -3,6 +3,7 @@
 - Preserve the dark/orange CriSpy palette, artwork, hero composition, and section order.
 - The approved direction is soft street style: local Onest/Rubik fonts, compact spacing, hand-drawn background graffiti, upper-right comets, and a star behind the portrait.
 - Stars use the clean hollow four-point shape ✧. Keep the portrait star high and partly behind the left edge; the header uses an outlined graffiti wordmark with a matching star.
+- Comet heads follow the direction of flight, with tails trailing behind. Avoid bright frames around gallery artwork; indicate keyboard focus in its caption.
 - Keep ambient animation gentle, behind the content, noninteractive, pausable, and compatible with reduced motion. Do not move or replace existing sections.
 - Make small, targeted improvements. A replacement theme or broad redesign requires an explicit request.
 - Treat reference portfolios as inspiration for individual details; adapt them to the current design.

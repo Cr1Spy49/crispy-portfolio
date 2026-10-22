@@ -36,13 +36,14 @@ def star_four():
 
 
 def comet_head():
-    return stroke(four_point(82, 82, 53, 58), CHALK, 3.2)
+    # The head points along +X; CSS rotates the whole comet to its path tangent.
+    return stroke(four_point(256, 128, 39, 48), CHALK, 3.2)
 
 
 def comet_trail():
-    return (stroke('M113 109 C153 150 213 188 282 207', ORANGE, 3, .8)
-            + stroke('M110 126 C150 180 189 214 240 246', CHALK, 1.6, .55)
-            + stroke('M142 112 C184 139 226 154 275 161', ORANGE, 1.6, .4))
+    return (stroke('M12 141 C72 124 143 121 214 128', 'url(#comet-ember)', 3.1)
+            + stroke('M40 163 C112 138 160 135 205 138', CHALK, 1.4, .4)
+            + stroke('M38 105 C99 101 157 115 211 120', ORANGE, 1.6, .45))
 
 
 def wordmark():
@@ -120,13 +121,17 @@ def main():
         for frame in range(3):
             symbols.append(f'<symbol id="{name}-{frame}" viewBox="{viewbox}">{draw(frame)}</symbol>')
     for name, draw, viewbox in [('star-four', star_four, '0 0 310 310'),
-                                ('comet-head', comet_head, '0 0 320 290'),
-                                ('comet-trail', comet_trail, '0 0 320 290'),
+                                ('comet-head', comet_head, '0 0 320 256'),
+                                ('comet-trail', comet_trail, '0 0 320 256'),
                                 ('wordmark', wordmark, '0 0 380 130')]:
         symbols.append(f'<symbol id="{name}" viewBox="{viewbox}">{draw()}</symbol>')
     output = ROOT / 'media' / 'graffiti' / 'marks.svg'
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text('<svg xmlns="http://www.w3.org/2000/svg"><defs>\n' + '\n'.join(symbols) + '\n</defs></svg>\n')
+    trail_gradient = ('<linearGradient id="comet-ember" x1="12" y1="128" x2="214" y2="128" gradientUnits="userSpaceOnUse">'
+                      f'<stop stop-color="{ORANGE}" stop-opacity="0"/>'
+                      f'<stop offset=".45" stop-color="{ORANGE}" stop-opacity=".55"/>'
+                      f'<stop offset="1" stop-color="{CHALK}" stop-opacity=".95"/></linearGradient>')
+    output.write_text('<svg xmlns="http://www.w3.org/2000/svg"><defs>\n' + trail_gradient + '\n' + '\n'.join(symbols) + '\n</defs></svg>\n')
     print(f'Generated {len(symbols)} vector marks: {output.stat().st_size} bytes')
 
 

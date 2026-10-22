@@ -92,11 +92,16 @@
 
         .nav-links {
             display: flex;
+            align-items: center;
             gap: 32px;
             list-style: none;
         }
+        .nav-links > li { display: flex; align-items: center; }
 
         .nav-links a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
             color: var(--muted);
             text-decoration: none;
             font-size: 0.85rem;
@@ -551,23 +556,9 @@
             transition: transform 0.3s;
         }
 
-        .gallery-item::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            pointer-events: none;
-        }
-
         .gallery-item:hover img { transform: scale(1.04); filter: brightness(0.82); }
         .gallery-item:hover .gallery-overlay { opacity: 1; }
         .gallery-item:hover .gallery-overlay-text { transform: translateY(0); }
-        .gallery-item:hover::after {
-            border-color: var(--orange);
-            box-shadow: 0 0 24px var(--orange-glow);
-        }
 
         /* ─── LIGHTBOX ─── */
         .lightbox {
@@ -1378,7 +1369,8 @@
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; }
         .voxel-icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; }
         .gallery-meta { color: var(--muted); font-size: .68rem; letter-spacing: 1px; white-space: nowrap; }
-        .gallery-item:focus-visible { outline-offset: 3px; }
+        .gallery-item:focus-visible { outline: none; }
+        .gallery-item:focus-visible .gallery-overlay-text { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
         .gallery-item:focus-visible .gallery-overlay { opacity: 1; }
         .gallery-item:focus-visible .gallery-overlay-text { transform: none; }
         .service-row { gap: 18px; }
@@ -1614,13 +1606,18 @@
         .street-doodle--tag { right: -72px; top: 73%; width: 310px; height: 190px; opacity: .15; transform: rotate(8deg); }
         .street-doodle--last { left: -20px; bottom: 110px; width: 160px; height: 150px; opacity: .12; transform: rotate(-16deg); }
         .street-comets { position: absolute; right: -34px; top: 70px; width: 385px; height: 390px; opacity: .67; }
-        .comet-slot { position: absolute; width: 250px; height: 227px; transform: rotate(-8deg); }
-        .comet-slot--one { top: 0; right: 78px; --flight-time: 22s; --flight-phase: -5s; }
-        .comet-slot--two { top: 58px; right: -25px; width: 190px; height: 172px; transform: rotate(-16deg); --flight-time: 26s; --flight-phase: -11s; opacity: .72; }
-        .comet-slot--three { top: 202px; right: 4px; width: 150px; height: 136px; transform: rotate(8deg); --flight-time: 30s; --flight-phase: -17s; opacity: .6; }
+        .comet-slot { position: absolute; width: 250px; height: 200px; }
+        .comet-slot--one { top: 0; right: 78px; --flight-time: 18s; --flight-phase: -5s; }
+        .comet-slot--two { top: 58px; right: -25px; width: 190px; height: 152px; --flight-time: 22s; --flight-phase: -11s; opacity: .72; }
+        .comet-slot--three { top: 202px; right: 4px; width: 150px; height: 120px; --flight-time: 26s; --flight-phase: -17s; opacity: .6; }
+        .comet-flight {
+            offset-path: path('M190 230 C140 190 120 130 65 65 S-60 -50 -130 -110');
+            offset-anchor: 80% 50%; offset-rotate: auto; offset-distance: 40%;
+            transform-origin: 80% 50%;
+        }
         .hero-star { position: absolute; width: 270px; height: 270px; left: -138px; top: -40px; z-index: -1; transform: rotate(-6deg); opacity: .85; }
         .portrait-star-motion { width: 100%; height: 100%; }
-        .comet-trail, .comet-spark { transform-box: view-box; transform-origin: 82px 82px; }
+        .comet-trail, .comet-spark { transform-box: view-box; transform-origin: 256px 128px; }
         .street-paused .street-ink, .street-tab-hidden .street-ink { --street-play: paused; }
         .street-motion-toggle {
             position: fixed; left: 16px; bottom: 16px; z-index: 90; display: inline-flex; align-items: center; gap: 7px;
@@ -1639,8 +1636,8 @@
             .ink-frame:nth-child(2) { animation-delay: -1.6s; }
             .ink-frame:nth-child(3) { animation-delay: -3.2s; }
             .street-float { animation: ink-orbit var(--float-time, 13s) ease-in-out infinite; animation-play-state: var(--street-play); }
-            .comet-flight { animation: comet-arc var(--flight-time, 22s) var(--flight-phase, 0s) cubic-bezier(.4,0,.2,1) infinite; animation-play-state: var(--street-play); }
-            .comet-trail { animation: comet-wake 6.4s ease-in-out infinite; animation-play-state: var(--street-play); }
+            .comet-flight { animation: comet-pass var(--flight-time, 18s) var(--flight-phase, 0s) linear infinite; animation-play-state: var(--street-play); }
+            .comet-trail { animation: comet-wake var(--flight-time, 18s) var(--flight-phase, 0s) linear infinite; animation-play-state: var(--street-play); }
             .comet-spark { animation: star-glint 6.4s ease-in-out infinite; animation-play-state: var(--street-play); }
             .portrait-star-motion { animation: star-sway 10s ease-in-out infinite; animation-play-state: var(--street-play); }
             @keyframes ink-redraw {
@@ -1659,22 +1656,24 @@
                 50% { transform: translateY(-4px) rotate(2deg) scale(1.015); }
             }
             @keyframes comet-wake {
-                0%, 100% { opacity: .45; transform: scale(.9, .96); }
-                50% { opacity: .9; transform: scale(1.04, 1.02); }
+                0%, 100% { opacity: 0; transform: scale(.55, .8); }
+                10% { opacity: .55; transform: scale(.65, .9); }
+                30% { opacity: .75; transform: scale(.82, 1); }
+                55% { opacity: .9; transform: scale(1, 1); }
+                72% { opacity: .9; transform: scale(1.15, .95); }
+                84%, 99% { opacity: 0; transform: scale(1.25, .9); }
             }
             @keyframes star-glint {
                 0%, 100% { opacity: .75; transform: scale(.98); }
                 50% { opacity: 1; transform: scale(1.025); }
             }
-            @keyframes comet-arc {
-                0%, 4% { opacity: 0; transform: translate3d(160px, 80px, 0) rotate(9deg) scale(.86); }
-                14% { opacity: .95; transform: translate3d(8px, 16px, 0) rotate(1deg) scale(1); }
-                32% { opacity: .95; transform: translate3d(-14px, 0, 0) rotate(-2deg) scale(1); }
-                50% { opacity: .95; transform: translate3d(-7px, -13px, 0) rotate(-4deg) scale(1.01); }
-                64% { opacity: .9; transform: translate3d(-26px, -23px, 0) rotate(-8deg) scale(1); }
-                76% { opacity: .5; transform: translate3d(-116px, -95px, 0) rotate(-20deg) scale(.88); }
-                86% { opacity: 0; transform: translate3d(-245px, -215px, 0) rotate(-28deg) scale(.7); }
-                87%, 100% { opacity: 0; transform: translate3d(160px, 80px, 0) rotate(9deg) scale(.86); }
+            @keyframes comet-pass {
+                0% { opacity: 0; offset-distance: 0%; }
+                10% { opacity: .95; offset-distance: 5%; }
+                30% { opacity: .95; offset-distance: 22%; }
+                55% { opacity: .95; offset-distance: 50%; }
+                72% { opacity: .9; offset-distance: 78%; }
+                84%, 100% { opacity: 0; offset-distance: 100%; }
             }
         }
         @media (max-width: 1100px) and (min-width: 901px) {
@@ -1734,22 +1733,22 @@
 
 <div class="street-backdrop" aria-hidden="true" inert>
     <div class="street-comets">
-        <div class="street-ink comet-slot comet-slot--one" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 290" aria-hidden="true" focusable="false"><g class="comet-trail"><use href="media/graffiti/marks.svg?v=2#comet-trail"/></g><g class="comet-spark"><use href="media/graffiti/marks.svg?v=2#comet-head"/></g></svg></div></div>
-        <div class="street-ink comet-slot comet-slot--two" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 290" aria-hidden="true" focusable="false"><g class="comet-trail"><use href="media/graffiti/marks.svg?v=2#comet-trail"/></g><g class="comet-spark"><use href="media/graffiti/marks.svg?v=2#comet-head"/></g></svg></div></div>
-        <div class="street-ink comet-slot comet-slot--three" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 290" aria-hidden="true" focusable="false"><g class="comet-trail"><use href="media/graffiti/marks.svg?v=2#comet-trail"/></g><g class="comet-spark"><use href="media/graffiti/marks.svg?v=2#comet-head"/></g></svg></div></div>
+        <div class="street-ink comet-slot comet-slot--one" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 256" aria-hidden="true" focusable="false"><g class="comet-trail"><use href="media/graffiti/marks.svg?v=3#comet-trail"/></g><g class="comet-spark"><use href="media/graffiti/marks.svg?v=3#comet-head"/></g></svg></div></div>
+        <div class="street-ink comet-slot comet-slot--two" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 256" aria-hidden="true" focusable="false"><g class="comet-trail"><use href="media/graffiti/marks.svg?v=3#comet-trail"/></g><g class="comet-spark"><use href="media/graffiti/marks.svg?v=3#comet-head"/></g></svg></div></div>
+        <div class="street-ink comet-slot comet-slot--three" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 256" aria-hidden="true" focusable="false"><g class="comet-trail"><use href="media/graffiti/marks.svg?v=3#comet-trail"/></g><g class="comet-spark"><use href="media/graffiti/marks.svg?v=3#comet-head"/></g></svg></div></div>
     </div>
-    <div class="street-ink street-doodle street-doodle--entry" data-street-ink style="--float-time:12s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 230 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#swoop-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#swoop-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#swoop-2"/></g></svg></div></div>
-    <div class="street-ink street-doodle street-doodle--signature" data-street-ink style="--float-time:14s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 350 210" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#tag-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#tag-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#tag-2"/></g></svg></div></div>
-    <div class="street-ink street-doodle street-doodle--smile" data-street-ink style="--float-time:11s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 240 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#smile-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#smile-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#smile-2"/></g></svg></div></div>
-    <div class="street-ink street-doodle street-doodle--arrow" data-street-ink style="--float-time:13s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 330 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#arrow-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#arrow-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#arrow-2"/></g></svg></div></div>
-    <div class="street-ink street-doodle street-doodle--loop" data-street-ink style="--float-time:15s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 230 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#swoop-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#swoop-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#swoop-2"/></g></svg></div></div>
-    <div class="street-ink street-doodle street-doodle--tag" data-street-ink style="--float-time:12s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 350 210" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#tag-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#tag-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#tag-2"/></g></svg></div></div>
-    <div class="street-ink street-doodle street-doodle--last" data-street-ink style="--float-time:14s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 240 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#smile-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#smile-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=2#smile-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--entry" data-street-ink style="--float-time:12s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 230 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#swoop-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#swoop-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#swoop-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--signature" data-street-ink style="--float-time:14s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 350 210" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#tag-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#tag-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#tag-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--smile" data-street-ink style="--float-time:11s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 240 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#smile-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#smile-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#smile-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--arrow" data-street-ink style="--float-time:13s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 330 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#arrow-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#arrow-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#arrow-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--loop" data-street-ink style="--float-time:15s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 230 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#swoop-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#swoop-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#swoop-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--tag" data-street-ink style="--float-time:12s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 350 210" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#tag-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#tag-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#tag-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--last" data-street-ink style="--float-time:14s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 240 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#smile-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#smile-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg?v=3#smile-2"/></g></svg></div></div>
 </div>
 
 <!-- NAVIGATION -->
 <nav>
-    <a href="#" class="nav-logo graffiti-brand" aria-label="CriSpy — на главную"><svg class="brand-mark" viewBox="0 0 380 130" aria-hidden="true" focusable="false"><use href="media/graffiti/marks.svg?v=2#wordmark"/></svg></a>
+    <a href="#" class="nav-logo graffiti-brand" aria-label="CriSpy — на главную"><svg class="brand-mark" viewBox="0 0 380 130" aria-hidden="true" focusable="false"><use href="media/graffiti/marks.svg?v=3#wordmark"/></svg></a>
     <ul class="nav-links">
         <li><a href="#renders">Рендеры</a></li>
         <li><a href="#services">Услуги</a></li>
@@ -1779,7 +1778,7 @@
     <section class="hero">
         <div class="hero-inner">
             <div class="hero-img-wrap reveal">
-                <div class="hero-star street-ink" data-street-ink aria-hidden="true" inert><div class="portrait-star-motion"><svg class="street-drawing" viewBox="0 0 310 310" aria-hidden="true" focusable="false"><use href="media/graffiti/marks.svg?v=2#star-four"/></svg></div></div>
+                <div class="hero-star street-ink" data-street-ink aria-hidden="true" inert><div class="portrait-star-motion"><svg class="street-drawing" viewBox="0 0 310 310" aria-hidden="true" focusable="false"><use href="media/graffiti/marks.svg?v=3#star-four"/></svg></div></div>
                 <img src="media/previews/main_art-480.webp" srcset="media/previews/main_art-480.webp 480w, media/previews/main_art-960.webp 960w" sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 900px) 480px, (max-width: 1100px) 330px, 360px" width="1536" height="2048" alt="CriSpy Art" loading="eager" fetchpriority="high" decoding="async">
                 <div class="hero-badge"><svg class="voxel-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7zm0 10 9-5M3 7l9 5m0 0v10"/></svg>3D Artist · Blender</div>
             </div>
