@@ -1,0 +1,3 @@
+# Optional development tools; the static site has no runtime dependencies.
+playwright==1.62.0
+Pillow==12.3.0
