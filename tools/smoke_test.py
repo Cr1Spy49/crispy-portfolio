@@ -68,7 +68,16 @@ class PortfolioChecks(unittest.TestCase):
         self.assertEqual(self.page.locator('.review-card').count(), 2)
         self.assertEqual(self.page.locator('.service-row').count(), 5)
         self.assertEqual(self.page.evaluate('getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()'), '#FF6A00')
-        self.assertEqual(self.page.locator('.hero-inner').evaluate('el=>getComputedStyle(el).gridTemplateColumns'), '420px 632px')
+        layout = self.page.evaluate('''() => {
+            const image=document.querySelector('.hero-img-wrap').getBoundingClientRect();
+            const content=document.querySelector('.hero-content').getBoundingClientRect();
+            const hero=document.querySelector('.hero').getBoundingClientRect();
+            return {imageWidth:image.width, imageRight:image.right, textLeft:content.left, heroHeight:hero.height};
+        }''')
+        self.assertGreaterEqual(layout['imageWidth'], 320)
+        self.assertLessEqual(layout['imageWidth'], 380)
+        self.assertLess(layout['imageRight'], layout['textLeft'])
+        self.assertLess(layout['heroHeight'], 740)
 
     def test_02_category_counts_and_rapid_filter_changes(self):
         for name, count in [('head-basic', 2), ('head-models', 2), ('medium', 5), ('big', 5), ('all', 15)]:
@@ -214,7 +223,7 @@ class PortfolioChecks(unittest.TestCase):
         self.page.wait_for_function("[...document.images].filter(el=>el.getAttribute('src')).every(el=>el.complete&&el.naturalWidth>0)")
         self.assertEqual(external, [])
         self.assertEqual(failed, [])
-        self.assertTrue(self.page.evaluate("document.fonts.check('16px Manrope') && document.fonts.check('16px \"Bebas Neue\"')"))
+        self.assertTrue(self.page.evaluate("document.fonts.check('16px Onest') && document.fonts.check('16px Rubik')"))
 
     def test_14_reduced_motion_and_no_javascript_content(self):
         self.page.emulate_media(reduced_motion='reduce')
@@ -249,6 +258,75 @@ class PortfolioChecks(unittest.TestCase):
             expect(self.page.locator(target)).to_have_class('gallery-wrap collapsed' if target=='#gallery-wrap' else 'reviews-wrap collapsed')
             self.page.locator(button).click()
             expect(self.page.locator(button)).to_have_attribute('aria-expanded', 'true')
+
+    def test_17_street_layer_is_decorative_and_fonts_load(self):
+        expect(self.page.locator('.comet-slot')).to_have_count(3)
+        expect(self.page.locator('.hero-star')).to_have_count(1)
+        expect(self.page.locator('.street-backdrop')).to_have_attribute('aria-hidden', 'true')
+        self.assertTrue(self.page.locator('.street-backdrop').evaluate('e=>e.inert'))
+        self.assertEqual(self.page.locator('.street-backdrop').evaluate('e=>getComputedStyle(e).pointerEvents'), 'none')
+        self.assertLess(self.page.locator('.hero-star').bounding_box()['x'], self.page.locator('.hero-img-wrap').bounding_box()['x'])
+        self.page.evaluate('document.fonts.ready')
+        self.assertIn('Onest', self.page.locator('body').evaluate('e=>getComputedStyle(e).fontFamily'))
+        self.assertIn('Rubik', self.page.locator('h1').evaluate('e=>getComputedStyle(e).fontFamily'))
+        # External SVG fragments must refer to real symbols in the shipped sprite.
+        import xml.etree.ElementTree as ET
+        symbols = {e.get('id') for e in ET.parse(ROOT/'media/graffiti/marks.svg').iter() if e.get('id')}
+        fragments = self.page.locator('.street-drawing use').evaluate_all('els=>els.map(e=>e.getAttribute("href").split("#")[1])')
+        self.assertTrue(set(fragments).issubset(symbols))
+        self.assertEqual(len(symbols), 18)
+
+    def test_18_background_motion_pause_and_preference(self):
+        toggle = self.page.locator('#street-motion-toggle')
+        expect(toggle).to_be_visible()
+        self.page.wait_for_function('getComputedStyle(document.querySelector(".comet-flight")).animationPlayState === "running"')
+        toggle.click()
+        expect(toggle).to_have_attribute('aria-pressed', 'true')
+        self.page.wait_for_function('getComputedStyle(document.querySelector(".comet-flight")).animationPlayState === "paused"')
+        before = self.page.locator('.comet-flight').first.evaluate('e=>e.getAnimations()[0].currentTime')
+        self.page.wait_for_timeout(150)
+        after = self.page.locator('.comet-flight').first.evaluate('e=>e.getAnimations()[0].currentTime')
+        self.assertAlmostEqual(before, after, delta=1)
+        self.page.reload(wait_until='networkidle')
+        expect(toggle).to_have_attribute('aria-pressed', 'true')
+        toggle.click()
+        expect(toggle).to_have_attribute('aria-pressed', 'false')
+        self.page.wait_for_function('getComputedStyle(document.querySelector(".comet-flight")).animationPlayState === "running"')
+
+    def test_19_comets_depart_and_return_without_layout_changes(self):
+        self.page.wait_for_function('document.querySelector(".comet-flight").getAnimations().length > 0')
+        result = self.page.locator('.comet-flight').first.evaluate('''element => {
+            const animation=element.getAnimations()[0];
+            const {duration,delay}=animation.effect.getTiming();
+            const width=document.documentElement.scrollWidth;
+            animation.pause();
+            const sample=phase=>{
+                animation.currentTime=delay+phase*duration;
+                return Number(getComputedStyle(element).opacity);
+            };
+            return {visible:sample(.25),away:sample(.92),returned:sample(1.25),
+                sameWidth:width===document.documentElement.scrollWidth};
+        }''')
+        self.assertGreater(result['visible'], .8)
+        self.assertLess(result['away'], .05)
+        self.assertGreater(result['returned'], .8)
+        self.assertTrue(result['sameWidth'])
+
+    def test_20_street_reduced_motion_uses_static_drawing(self):
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.reload(wait_until='networkidle')
+        expect(self.page.locator('#street-motion-toggle')).not_to_be_visible()
+        self.assertEqual(self.page.locator('.comet-flight').first.evaluate('e=>getComputedStyle(e).animationName'), 'none')
+        self.assertEqual(self.page.locator('.ink-frame').nth(0).evaluate('e=>getComputedStyle(e).opacity'), '1')
+        self.assertEqual(self.page.locator('.ink-frame').nth(1).evaluate('e=>getComputedStyle(e).opacity'), '0')
+        self.open()
+        expect(self.page.locator('#lb-counter')).to_have_text('1 / 15')
+
+    def test_21_pause_still_works_when_storage_is_unavailable(self):
+        self.page.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw Error('blocked')}})")
+        self.page.reload(wait_until='networkidle')
+        self.page.locator('#street-motion-toggle').click()
+        expect(self.page.locator('#street-motion-toggle')).to_have_attribute('aria-pressed', 'true')
 
 
 if __name__ == '__main__':

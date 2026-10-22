@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CriSpy | 3D Portfolio</title>
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAACm0lEQVR4nO2asWsUQRTGv9nd4xIsNCSQoCcJBhFUiKZJpYUWignYCFZaWNkI+geIVnZiIRjrWEiCaCOCIEEOOwsFD6MxHmJyIQS5SOBybja3Y3Gx0MxbzeOSh7z5NQP3MbPffsy+m50dgy2gdOWM5fRLDTD1cZrUzz+fMWxTBEGrB/zf8AFIG5BGfQDsolKq1MlC9+P1Y+6wmSz0niK1kaNdrHtRPwN8ANIGpFEfQMTt+GWxRmq10RvcYbH0fZnUCvffs8elUD8DfADSBqRRH0DLXy8B4Ombb+Qq8W8rtgt3imTfB9eO+9fhVuMDkDYgjfoA2CtBLrOjJ21h9Z1TK7cN4ubK9vpRPwN8ANIGpFEfwJbsCR6sDvHMrIbAqwqpX0wfkRp3lah+BvgApA1Iw14I7TQlACmaGf7eVjFA9utM5oG07haTENa2IzVAYLGh7Y1bvyWWWTi4he7Z2iSptT08iz3x53/xtilu9U2QWlaBVP8I+ACkDUhjPswtW2sAY4E/2+7qZbiKHJBiqnGJHHTm3nVS60zmkSeKYA41HBvsIotgVvui0k9e80n3VfI+ojWTW48CG9pmpXdTxRFS64m/khoApMg5f2+YAMbUEa5ffzNt1j/ESrCL1NQ/Aj4AaQPSbPuW2O6OACESp1bPW9gTPbyBy4usbupngA9A2oA06gOIsk56HCoukFp/+TCpzTaXKE4O7MsjQuzUann3AukXt6fHSG1gaZju2EdL6meAD0DagDTqA4jGX9JvUcPMePZ2NEgttAm5EbcjzgGTdOFFgecnC/UzwAcgbUAa9QGwj6yNBedYF/xUjtFAu1Oby+/H26G7ZN+R4mlS898FmPgApA1Ioz4A9gmRrAIpgT8hwsQHIG1AGvUB/AR5B7e4JYfr6QAAAABJRU5ErkJggg==">
-    <link rel="preload" as="font" href="media/fonts/manrope.woff" type="font/woff" crossorigin>
+    <link rel="preload" as="font" href="media/fonts/onest.woff" type="font/woff" crossorigin>
     <script>document.documentElement.classList.add('js');</script>
     <meta name="theme-color" content="#05060A">
     <meta name="description" content="Криспи — Minecraft-рендеры и 3D-анимации в Blender. Работы, отзывы, прайс и заказ в Telegram.">
@@ -1525,12 +1525,205 @@
             *, *::before, *::after { animation: none !important; transition: none !important; }
             .reveal, .review-card { opacity: 1; transform: none; }
         }
+        /* Soft street layer: original sections and artwork stay in place. */
+        @font-face {
+            font-family: 'Onest'; src: url('media/fonts/onest.woff') format('woff');
+            font-weight: 100 900; font-display: swap;
+        }
+        @font-face {
+            font-family: 'Rubik'; src: url('media/fonts/rubik.woff') format('woff');
+            font-weight: 300 900; font-display: swap;
+        }
+        :root { --street-ease: cubic-bezier(.22, .68, .25, 1); --street-paper: #f1dfc6; }
+        body { position: relative; isolation: isolate; font-family: 'Onest', sans-serif; font-size: 15px; }
+        .container { max-width: 1120px; }
+        .container .container { padding-inline: 0; }
+        footer { position: relative; z-index: 1; }
+        .nav-logo, .hero h1, .section-title, .stat-num, .service-price,
+        .support-title, .footer-logo, .review-price-val, .rule-num {
+            font-family: 'Rubik', sans-serif;
+        }
+        .nav-logo { font-weight: 800; font-size: 1.55rem; letter-spacing: -.8px; transform: rotate(-3deg); }
+        .hero { min-height: 0; padding: 112px 0 48px; }
+        .hero-inner { grid-template-columns: 360px minmax(0, 1fr); gap: 56px; }
+        .hero-img-wrap { isolation: isolate; }
+        .hero h1 { font-size: clamp(2.6rem, 4.3vw, 3.8rem); font-weight: 700; line-height: 1.05; letter-spacing: -1.7px; margin-bottom: 14px; }
+        .hero-sub { font-size: .95rem; line-height: 1.75; margin-bottom: 22px; max-width: 440px; }
+        .hero-top-row { margin-bottom: 18px; }
+        .software-icons { margin-bottom: 24px; }
+        .hero-btns { gap: 10px; }
+        .hero-note { color: #83818c; font-size: .73rem; }
+        .stats-section { padding: 30px 0; }
+        .stat-item { padding: 24px 18px; }
+        .stat-num { font-size: 2.2rem; font-weight: 650; letter-spacing: -.8px; }
+        .stat-label { font-size: .7rem; letter-spacing: .9px; }
+        .gallery-section, .reviews-section, .services-section { padding: 48px 0; }
+        .section-header { margin-bottom: 26px; gap: 12px; }
+        .section-title { font-weight: 650; font-size: clamp(1.55rem, 2.5vw, 2rem); letter-spacing: -.8px; }
+        .gallery-filters { margin-bottom: 20px; }
+        .services-inner { gap: 40px; }
+        .services-desc { font-size: .9rem; line-height: 1.75; }
+        .service-row { padding-block: 14px; }
+        .service-price, .review-price-val { font-weight: 600; letter-spacing: -.3px; }
+        .service-price { font-size: 1.1rem; }
+        .review-price-val { font-size: .75rem; }
+        .review-render-name { color: #98949e; }
+        .rule-num { font-size: .85rem; font-weight: 700; }
+        .support-section { padding: 48px 0 60px; }
+        .support-title { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 650; letter-spacing: -.9px; }
+        .support-sub { margin-bottom: 22px; }
+        .footer-logo { font-size: 1.5rem; font-weight: 750; letter-spacing: -.7px; }
+
+        /* Familiar buttons, softer edges, a small marker-like underline. */
+        .btn, .nav-cta, .btn-support, .filter-pill, .soft-icon, .burger {
+            transition: transform .32s var(--street-ease), background .32s ease, border-color .32s ease, color .32s ease, box-shadow .32s ease;
+        }
+        .btn { padding: 12px 20px; border-radius: 12px 9px 12px 9px; font-size: .82rem; letter-spacing: .65px; border: 1px solid rgba(255,255,255,.12); }
+        .btn-orange { color: #211006; background: linear-gradient(135deg, #ff863d, var(--orange)); box-shadow: 0 3px 0 rgba(164,62,9,.3); }
+        .btn-tg { color: #061720; background: linear-gradient(135deg, #5fc6f3, var(--tg)); box-shadow: 0 3px 0 rgba(23,103,144,.25); }
+        .btn-orange:hover { color: #211006; background: #ff8c47; }
+        .btn-tg:hover { color: #061720; background: #70cff7; }
+        .btn:hover, .nav-cta:hover, .btn-support:hover { transform: translateY(-2px); }
+        .btn:active, .nav-cta:active, .btn-support:active { transform: translateY(0); }
+        .nav-links .nav-cta { color: #211006 !important; border-radius: 10px 7px 10px 7px; padding: 9px 20px; }
+        .nav-links .nav-cta:hover { background: #ff8c47; }
+        .filter-pill { border-radius: 9px 6px 9px 6px; }
+        .filter-pill.active, .filter-pill.active:hover { color: #211006; }
+        .btn-support { border-radius: 12px 8px 12px 8px; font-family: 'Onest', sans-serif; font-size: .85rem; }
+        .soft-icon { border-radius: 10px 7px 10px 7px; }
+        .gallery-item img { transition: transform .55s var(--street-ease), filter .45s ease; }
+        .gallery-item:hover img { transform: scale(1.025); }
+        .gallery-toggle-arrow svg { transition-timing-function: var(--street-ease); }
+
+        /* Decorations never participate in layout, focus, or pointer targeting. */
+        .street-backdrop { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; user-select: none; }
+        .street-ink { --street-play: paused; pointer-events: none; user-select: none; }
+        .street-ink.is-visible { --street-play: running; }
+        .street-drawing { display: block; width: 100%; height: 100%; overflow: visible; }
+        .street-float, .comet-flight { width: 100%; height: 100%; }
+        .ink-frame { opacity: 0; }
+        .ink-frame:first-child { opacity: 1; }
+        .street-doodle { position: absolute; width: 220px; opacity: .18; }
+        .street-doodle--entry { left: -42px; top: 88px; width: 160px; height: 220px; opacity: .24; transform: rotate(-13deg); }
+        .street-doodle--signature { right: -42px; top: 460px; width: 350px; height: 210px; opacity: .22; transform: rotate(-12deg); }
+        .street-doodle--smile { left: -72px; top: 23%; width: 205px; height: 188px; transform: rotate(12deg); }
+        .street-doodle--arrow { right: -52px; top: 39%; width: 230px; height: 155px; transform: rotate(36deg); }
+        .street-doodle--loop { left: -76px; top: 55%; width: 190px; height: 260px; opacity: .14; transform: rotate(-8deg); }
+        .street-doodle--tag { right: -72px; top: 73%; width: 310px; height: 190px; opacity: .15; transform: rotate(8deg); }
+        .street-doodle--last { left: -20px; bottom: 110px; width: 160px; height: 150px; opacity: .12; transform: rotate(-16deg); }
+        .street-comets { position: absolute; right: -34px; top: 70px; width: 385px; height: 390px; opacity: .67; }
+        .comet-slot { position: absolute; width: 250px; height: 227px; transform: rotate(-8deg); }
+        .comet-slot--one { top: 0; right: 78px; --flight-time: 19s; --flight-phase: -4s; }
+        .comet-slot--two { top: 58px; right: -25px; width: 190px; height: 172px; transform: rotate(-16deg); --flight-time: 23s; --flight-phase: -8s; opacity: .72; }
+        .comet-slot--three { top: 202px; right: 4px; width: 150px; height: 136px; transform: rotate(8deg); --flight-time: 27s; --flight-phase: -15s; opacity: .6; }
+        .hero-star { position: absolute; width: 280px; height: 280px; left: -144px; top: 30%; z-index: -1; transform: rotate(-17deg); opacity: .85; }
+        .street-paused .street-ink, .street-tab-hidden .street-ink { --street-play: paused; }
+        .street-motion-toggle {
+            position: fixed; left: 16px; bottom: 16px; z-index: 90; display: inline-flex; align-items: center; gap: 7px;
+            min-height: 36px; padding: 8px 12px; border: 1px solid rgba(255,255,255,.13); border-radius: 18px;
+            background: rgba(13,14,20,.9); color: #bab5be; font-family: 'Onest', sans-serif; font-size: .67rem;
+            cursor: pointer; transition: color .25s ease, border-color .25s ease; backdrop-filter: blur(6px);
+        }
+        .street-motion-toggle:hover, .street-motion-toggle[aria-pressed="true"] { color: var(--orange); border-color: rgba(255,106,0,.5); }
+        .street-motion-toggle svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+        .motion-play { display: none; }
+        [aria-pressed="true"] .motion-pause { display: none; }
+        [aria-pressed="true"] .motion-play { display: block; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .ink-frame { animation: ink-redraw 3.6s linear infinite; animation-play-state: var(--street-play); }
+            .ink-frame:nth-child(2) { animation-delay: -1.2s; }
+            .ink-frame:nth-child(3) { animation-delay: -2.4s; }
+            .street-float { animation: ink-float var(--float-time, 11s) cubic-bezier(.45,0,.55,1) infinite alternate; animation-play-state: var(--street-play); }
+            .comet-flight { animation: comet-route var(--flight-time, 19s) var(--flight-phase, 0s) cubic-bezier(.4,0,.4,1) infinite; animation-play-state: var(--street-play); }
+            @keyframes ink-redraw {
+                0%, 20% { opacity: 1; }
+                33.333%, 86.666% { opacity: 0; }
+                100% { opacity: 1; }
+            }
+            @keyframes ink-float {
+                from { transform: translate3d(0, -5px, 0) rotate(-1deg); }
+                to { transform: translate3d(6px, 6px, 0) rotate(1.4deg); }
+            }
+            @keyframes comet-route {
+                0% { opacity: 0; transform: translate3d(170px, 110px, 0) rotate(-5deg); }
+                12% { opacity: .95; transform: translate3d(0, 0, 0) rotate(0deg); }
+                30% { opacity: .95; transform: translate3d(-9px, -6px, 0) rotate(-2deg); }
+                49% { opacity: .95; transform: translate3d(3px, 5px, 0) rotate(1.5deg); }
+                66% { opacity: .95; transform: translate3d(-12px, -4px, 0) rotate(-1deg); }
+                75% { opacity: .8; transform: translate3d(-38px, -27px, 0) rotate(-5deg); }
+                86% { opacity: 0; transform: translate3d(-230px, -270px, 0) rotate(-12deg); }
+                87%, 100% { opacity: 0; transform: translate3d(170px, 110px, 0) rotate(-5deg); }
+            }
+        }
+        @media (max-width: 1100px) and (min-width: 901px) {
+            .hero-inner { grid-template-columns: 330px minmax(0, 1fr); gap: 40px; }
+            .hero-star { width: 250px; height: 250px; left: -118px; }
+            .street-comets { right: -80px; opacity: .48; }
+        }
+        @media (max-width: 900px) {
+            .hero { padding: 94px 0 36px; }
+            .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+            .hero-img-wrap { max-width: 480px; width: 100%; margin-inline: auto; }
+            .hero-content { width: 100%; max-width: 540px; margin-inline: auto; }
+            .hero-star { width: 230px; height: 230px; left: -104px; top: 17%; }
+            .hero h1 { font-size: clamp(2.5rem, 7vw, 3.1rem); }
+            .hero-img-wrap img { object-position: center 35%; }
+            .street-comets { top: 68px; right: -90px; width: 280px; opacity: .4; }
+            .street-doodle--signature { top: 620px; width: 230px; right: -90px; opacity: .12; }
+            .services-inner { gap: 24px; }
+        }
+        @media (max-width: 640px) {
+            .hero { padding: 88px 0 30px; }
+            .hero-inner { gap: 25px; }
+            .hero h1 { font-size: clamp(2.15rem, 9vw, 2.7rem); letter-spacing: -1px; }
+            .hero-sub { font-size: .9rem; line-height: 1.7; }
+            .hero-img-wrap img { height: 255px; }
+            .hero-star { width: 190px; height: 190px; left: -86px; top: 15%; opacity: .65; }
+            .street-doodle--entry { width: 100px; left: -64px; opacity: .17; }
+            .street-doodle--smile, .street-doodle--arrow, .street-doodle--loop, .street-doodle--tag, .street-doodle--last { opacity: .09; }
+            .street-comets { right: -140px; top: 62px; opacity: .35; }
+            .gallery-section, .reviews-section, .services-section { padding: 34px 0; }
+            .stats-section { padding: 24px 0; }
+            .stat-item { padding: 20px 12px; }
+            .stat-num { font-size: 1.9rem; }
+            .stat-label { font-size: .65rem; letter-spacing: .55px; }
+            .section-header { margin-bottom: 22px; gap: 10px; }
+            .section-title { font-size: 1.6rem; }
+            .btn { min-height: 46px; padding: 11px 16px; font-size: .78rem; }
+            .hero-top-row { gap: 8px; }
+            .hero-tag { font-size: .65rem; letter-spacing: 1.2px; padding-inline: 10px; }
+            .availability-badge { font-size: .68rem; }
+            .support-section { padding: 36px 0 46px; }
+            .street-motion-toggle { left: 12px; bottom: 12px; width: 40px; height: 40px; min-height: 40px; padding: 0; justify-content: center; border-radius: 50%; }
+            .street-motion-toggle span { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .street-ink .ink-frame { opacity: 0; }
+            .street-ink .ink-frame:first-child { opacity: 1; }
+            .street-motion-toggle { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <div class="glow-blob glow-blob-1"></div>
 <div class="glow-blob glow-blob-2"></div>
+
+<div class="street-backdrop" aria-hidden="true" inert>
+    <div class="street-comets">
+        <div class="street-ink comet-slot comet-slot--one" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-2"/></g></svg></div></div>
+        <div class="street-ink comet-slot comet-slot--two" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-2"/></g></svg></div></div>
+        <div class="street-ink comet-slot comet-slot--three" data-street-ink><div class="comet-flight"><svg class="street-drawing" viewBox="0 0 320 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#comet-2"/></g></svg></div></div>
+    </div>
+    <div class="street-ink street-doodle street-doodle--entry" data-street-ink style="--float-time:12s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 230 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#swoop-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#swoop-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#swoop-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--signature" data-street-ink style="--float-time:14s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 350 210" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#tag-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#tag-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#tag-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--smile" data-street-ink style="--float-time:11s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 240 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#smile-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#smile-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#smile-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--arrow" data-street-ink style="--float-time:13s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 330 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#arrow-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#arrow-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#arrow-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--loop" data-street-ink style="--float-time:15s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 230 290" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#swoop-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#swoop-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#swoop-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--tag" data-street-ink style="--float-time:12s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 350 210" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#tag-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#tag-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#tag-2"/></g></svg></div></div>
+    <div class="street-ink street-doodle street-doodle--last" data-street-ink style="--float-time:14s"><div class="street-float"><svg class="street-drawing" viewBox="0 0 240 220" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#smile-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#smile-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#smile-2"/></g></svg></div></div>
+</div>
 
 <!-- NAVIGATION -->
 <nav>
@@ -1564,7 +1757,8 @@
     <section class="hero">
         <div class="hero-inner">
             <div class="hero-img-wrap reveal">
-                <img src="media/previews/main_art-480.webp" srcset="media/previews/main_art-480.webp 480w, media/previews/main_art-960.webp 960w" sizes="(max-width: 900px) calc(100vw - 32px), 420px" width="1536" height="2048" alt="CriSpy Art" loading="eager" fetchpriority="high" decoding="async">
+                <div class="hero-star street-ink" data-street-ink aria-hidden="true" inert><div class="street-float"><svg class="street-drawing" viewBox="0 0 310 310" aria-hidden="true" focusable="false"><g class="ink-frame"><use href="media/graffiti/marks.svg#burst-0"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#burst-1"/></g><g class="ink-frame"><use href="media/graffiti/marks.svg#burst-2"/></g></svg></div></div>
+                <img src="media/previews/main_art-480.webp" srcset="media/previews/main_art-480.webp 480w, media/previews/main_art-960.webp 960w" sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 900px) 480px, (max-width: 1100px) 330px, 360px" width="1536" height="2048" alt="CriSpy Art" loading="eager" fetchpriority="high" decoding="async">
                 <div class="hero-badge"><svg class="voxel-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7zm0 10 9-5M3 7l9 5m0 0v10"/></svg>3D Artist · Blender</div>
             </div>
 
@@ -1912,6 +2106,10 @@
 
 </div>
 
+<button class="street-motion-toggle" id="street-motion-toggle" type="button" aria-pressed="false" aria-label="Приостановить фоновую анимацию" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="motion-pause" d="M8 5v14M16 5v14"/><path class="motion-play" d="m8 5 11 7-11 7Z"/></svg><span>Пауза фона</span>
+</button>
+
 <!-- SCROLL TO TOP -->
 <button class="scroll-top" id="scroll-top" aria-label="Наверх">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1954,6 +2152,40 @@
 
 <script>
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    // Ambient vectors run only near the viewport and can be paused independently.
+    const streetMarks = Array.from(document.querySelectorAll('[data-street-ink]'));
+    const streetToggle = document.getElementById('street-motion-toggle');
+    const streetMotionKey = 'crispy:street-motion-paused';
+    let streetPaused = false;
+    try { streetPaused = localStorage.getItem(streetMotionKey) === 'true'; } catch { /* Optional preference storage. */ }
+    function updateStreetMotion() {
+        document.documentElement.classList.toggle('street-paused', streetPaused);
+        streetToggle.setAttribute('aria-pressed', String(streetPaused));
+        streetToggle.setAttribute('aria-label', streetPaused ? 'Включить фоновую анимацию' : 'Приостановить фоновую анимацию');
+        streetToggle.title = streetPaused ? 'Включить фоновую анимацию' : 'Приостановить фоновую анимацию';
+        streetToggle.querySelector('span').textContent = streetPaused ? 'Включить фон' : 'Пауза фона';
+        streetToggle.hidden = reducedMotion.matches;
+    }
+    if ('IntersectionObserver' in window) {
+        const streetObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => entry.target.classList.toggle('is-visible', entry.isIntersecting));
+        }, { rootMargin: '80px' });
+        streetMarks.forEach(mark => streetObserver.observe(mark));
+    } else {
+        streetMarks.forEach(mark => mark.classList.add('is-visible'));
+    }
+    streetToggle.addEventListener('click', () => {
+        streetPaused = !streetPaused;
+        updateStreetMotion();
+        try { localStorage.setItem(streetMotionKey, String(streetPaused)); } catch { /* Keep the current choice for this page. */ }
+    });
+    reducedMotion.addEventListener('change', updateStreetMotion);
+    document.addEventListener('visibilitychange', () => {
+        document.documentElement.classList.toggle('street-tab-hidden', document.hidden);
+    });
+    updateStreetMotion();
+
+
     // ─── IMAGE PROTECTION ───
     // Блокируем правую кнопку на лайтбоксе и hero-изображении
     document.addEventListener('contextmenu', (e) => {
