@@ -1,5 +1,6 @@
-"""Author the lightweight graffiti sprite: three gently redrawn vector frames per mark.
-No image dependencies. Run: python3 tools/make_graffiti.py
+"""Build the graffiti sprite, clean four-point stars, and outlined wordmark.
+Optional build tooling: fontTools. Run: python3 tools/make_graffiti.py
+The site serves the generated SVG directly and needs no build dependencies.
 """
 from pathlib import Path
 import random
@@ -21,31 +22,56 @@ def stroke(path, color=ORANGE, width=4, opacity=1, fill='none'):
     return f'<path d="{path}" fill="{fill}" stroke="{color}" stroke-width="{width}" opacity="{opacity}" stroke-linecap="round" stroke-linejoin="round"/>'
 
 
-def comet(frame):
-    tail = [
-        'M110 115 C151 130 165 172 220 203',
-        'M117 100 C174 119 218 151 280 160',
-        'M94 130 C115 178 161 208 184 258',
-        'M140 133 C162 153 177 176 204 182',
-    ]
-    star = 'M84 29 Q94 67 130 79 Q98 85 83 128 Q75 92 35 85 Q70 73 84 29Z'
-    result = ''.join(stroke(redraw(path, 100 * frame + i), CHALK if i == 1 else ORANGE, 3 if i == 1 else 5, .8) for i, path in enumerate(tail))
-    star = redraw(star, 30 + frame)
-    result += stroke(star, INK, 13, 1, INK)
-    result += stroke(star, ORANGE, 7)
-    result += stroke(redraw('M80 48 Q80 73 56 82 M91 83 Q83 88 81 107', frame + 44), CHALK, 2.5)
-    result += stroke(redraw('M152 171 Q161 186 171 190 M227 187 L238 194 M192 235 L197 245', frame + 51), ORANGE, 2.5, .65)
-    for x, y, radius in [(145, 108, 2), (124, 174, 2.2), (245, 179, 1.5), (54, 56, 1.8), (215, 224, 1.5)]:
-        result += f'<circle cx="{x + frame * .4}" cy="{y - frame * .4}" r="{radius}" fill="{ORANGE}" opacity=".6"/>'
-    return result
+def four_point(cx, cy, rx, ry):
+    """Four sharp tips with inward-curving sides, matching the shape of ✧."""
+    return (f'M{cx} {cy-ry} '
+            f'C{cx+rx*.13} {cy-ry*.27} {cx+rx*.27} {cy-ry*.13} {cx+rx} {cy} '
+            f'C{cx+rx*.27} {cy+ry*.13} {cx+rx*.13} {cy+ry*.27} {cx} {cy+ry} '
+            f'C{cx-rx*.13} {cy+ry*.27} {cx-rx*.27} {cy+ry*.13} {cx-rx} {cy} '
+            f'C{cx-rx*.27} {cy-ry*.13} {cx-rx*.13} {cy-ry*.27} {cx} {cy-ry}Z')
 
 
-def burst(frame):
-    path = redraw('M159 24 Q169 79 197 106 L281 85 L232 151 L279 226 L194 213 L154 289 L121 219 L29 238 L77 161 L24 102 L112 112Z', 80 + frame)
-    result = stroke(path, INK, 13, 1, INK)
-    result += stroke(path, ORANGE, 5, 1, '#a23c12')
-    result += stroke(redraw('M151 47 L169 112 L198 125 L251 108 M70 214 L117 190 M176 232 L157 267', 90 + frame), CHALK, 3, .8)
-    result += stroke(redraw('M54 58 L42 42 M24 170 L9 172 M255 254 L265 270 M235 48 L243 28', 96 + frame), ORANGE, 3, .7)
+def star_four():
+    return stroke(four_point(155, 155, 135, 142), ORANGE, 4)
+
+
+def comet_head():
+    return stroke(four_point(82, 82, 53, 58), CHALK, 3.2)
+
+
+def comet_trail():
+    return (stroke('M113 109 C153 150 213 188 282 207', ORANGE, 3, .8)
+            + stroke('M110 126 C150 180 189 214 240 246', CHALK, 1.6, .55)
+            + stroke('M142 112 C184 139 226 154 275 161', ORANGE, 1.6, .4))
+
+
+def wordmark():
+    from fontTools.ttLib import TTFont
+    from fontTools.pens.boundsPen import BoundsPen
+    from fontTools.pens.svgPathPen import SVGPathPen
+    from fontTools.pens.transformPen import TransformPen
+    # Renamed subset of Knewave; see media/fonts/knewave-OFL.txt.
+    font = TTFont(ROOT / 'media' / 'fonts' / 'crispy-logo-source.woff')
+    glyphs = font.getGlyphSet()
+    cmap = font.getBestCmap()
+    outline, bounds = SVGPathPen(glyphs), BoundsPen(glyphs)
+    offset = 0
+    for character in 'CriSpy':
+        name = cmap[ord(character)]
+        matrix = (1, 0, 0, 1, offset, 0)
+        glyphs[name].draw(TransformPen(outline, matrix))
+        glyphs[name].draw(TransformPen(bounds, matrix))
+        offset += font['hmtx'][name][0]
+    xmin, ymin, xmax, ymax = bounds.bounds
+    scale = min(285 / (xmax - xmin), 76 / (ymax - ymin))
+    transform = f'translate({20-xmin*scale:.4f} {99+ymin*scale:.4f}) scale({scale:.6f} {-scale:.6f})'
+    path = f'<path transform="{transform}" d="{outline.getCommands()}"/>'
+    result = '<g transform="rotate(-5 170 65)">'
+    result += f'<g fill="{ORANGE}" transform="translate(3 4)">{path}</g>'
+    result += f'<g fill="{CHALK}">{path}</g>'
+    result += stroke('M24 114 Q153 96 310 105', ORANGE, 4.5)
+    result += '</g>'
+    result += stroke(four_point(345, 42, 22, 31), ORANGE, 3.5)
     return result
 
 
@@ -87,17 +113,21 @@ def arrow(frame):
 
 
 def main():
-    drawings = [('comet', comet, '0 0 320 290'), ('burst', burst, '0 0 310 310'),
-                ('tag', tag, '0 0 350 210'), ('swoop', swoop, '0 0 230 290'),
+    drawings = [('tag', tag, '0 0 350 210'), ('swoop', swoop, '0 0 230 290'),
                 ('smile', smile, '0 0 240 220'), ('arrow', arrow, '0 0 330 220')]
     symbols = []
     for name, draw, viewbox in drawings:
         for frame in range(3):
             symbols.append(f'<symbol id="{name}-{frame}" viewBox="{viewbox}">{draw(frame)}</symbol>')
+    for name, draw, viewbox in [('star-four', star_four, '0 0 310 310'),
+                                ('comet-head', comet_head, '0 0 320 290'),
+                                ('comet-trail', comet_trail, '0 0 320 290'),
+                                ('wordmark', wordmark, '0 0 380 130')]:
+        symbols.append(f'<symbol id="{name}" viewBox="{viewbox}">{draw()}</symbol>')
     output = ROOT / 'media' / 'graffiti' / 'marks.svg'
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text('<svg xmlns="http://www.w3.org/2000/svg"><defs>\n' + '\n'.join(symbols) + '\n</defs></svg>\n')
-    print(f'Generated 18 original vector marks: {output.stat().st_size} bytes')
+    print(f'Generated {len(symbols)} vector marks: {output.stat().st_size} bytes')
 
 
 if __name__ == '__main__':

@@ -140,7 +140,7 @@ class PortfolioChecks(unittest.TestCase):
         self.page.keyboard.press('Escape')
         expect(self.page.locator('#lightbox')).not_to_be_visible()
         expect(card).to_be_focused()
-        self.assertEqual(self.page.evaluate('document.body.style.overflow'), '')
+        self.page.wait_for_function("document.body.style.overflow === ''")
         self.page.keyboard.press('Space')
         expect(self.page.locator('#lightbox')).to_be_visible()
 
@@ -274,7 +274,8 @@ class PortfolioChecks(unittest.TestCase):
         symbols = {e.get('id') for e in ET.parse(ROOT/'media/graffiti/marks.svg').iter() if e.get('id')}
         fragments = self.page.locator('.street-drawing use').evaluate_all('els=>els.map(e=>e.getAttribute("href").split("#")[1])')
         self.assertTrue(set(fragments).issubset(symbols))
-        self.assertEqual(len(symbols), 18)
+        self.assertTrue({'star-four', 'wordmark', 'comet-head', 'comet-trail'}.issubset(symbols))
+        self.assertFalse({'burst-0', 'comet-0'} & symbols)
 
     def test_18_background_motion_pause_and_preference(self):
         toggle = self.page.locator('#street-motion-toggle')
