@@ -1,0 +1,12 @@
+{
+  "before": {
+    "bytes": 20907826,
+    "requests": 15
+  },
+  "after": {
+    "bytes": 435078,
+    "requests": 16
+  },
+  "baseline_commit": "ebf96662bf494c7091557f439457deb2e4869ce1",
+  "method": "Fresh Chromium context per version, 1440x1000 viewport. Successful local HTTP response body bytes until networkidle, no HTTP compression. External requests aborted in both versions. No scrolling, filtering or modal opening before measurement."
+}

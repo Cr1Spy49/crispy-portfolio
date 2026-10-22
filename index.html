@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CriSpy | 3D Portfolio</title>
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAACm0lEQVR4nO2asWsUQRTGv9nd4xIsNCSQoCcJBhFUiKZJpYUWignYCFZaWNkI+geIVnZiIRjrWEiCaCOCIEEOOwsFD6MxHmJyIQS5SOBybja3Y3Gx0MxbzeOSh7z5NQP3MbPffsy+m50dgy2gdOWM5fRLDTD1cZrUzz+fMWxTBEGrB/zf8AFIG5BGfQDsolKq1MlC9+P1Y+6wmSz0niK1kaNdrHtRPwN8ANIGpFEfQMTt+GWxRmq10RvcYbH0fZnUCvffs8elUD8DfADSBqRRH0DLXy8B4Ombb+Qq8W8rtgt3imTfB9eO+9fhVuMDkDYgjfoA2CtBLrOjJ21h9Z1TK7cN4ubK9vpRPwN8ANIGpFEfwJbsCR6sDvHMrIbAqwqpX0wfkRp3lah+BvgApA1Iw14I7TQlACmaGf7eVjFA9utM5oG07haTENa2IzVAYLGh7Y1bvyWWWTi4he7Z2iSptT08iz3x53/xtilu9U2QWlaBVP8I+ACkDUhjPswtW2sAY4E/2+7qZbiKHJBiqnGJHHTm3nVS60zmkSeKYA41HBvsIotgVvui0k9e80n3VfI+ojWTW48CG9pmpXdTxRFS64m/khoApMg5f2+YAMbUEa5ffzNt1j/ESrCL1NQ/Aj4AaQPSbPuW2O6OACESp1bPW9gTPbyBy4usbupngA9A2oA06gOIsk56HCoukFp/+TCpzTaXKE4O7MsjQuzUann3AukXt6fHSG1gaZju2EdL6meAD0DagDTqA4jGX9JvUcPMePZ2NEgttAm5EbcjzgGTdOFFgecnC/UzwAcgbUAa9QGwj6yNBedYF/xUjtFAu1Oby+/H26G7ZN+R4mlS898FmPgApA1Ioz4A9gmRrAIpgT8hwsQHIG1AGvUB/AR5B7e4JYfr6QAAAABJRU5ErkJggg==">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" as="image" href="main_art.png" fetchpriority="high">
+    <link rel="preload" as="font" href="media/fonts/manrope.woff" type="font/woff" crossorigin>
+    <script>document.documentElement.classList.add('js');</script>
+    <meta name="theme-color" content="#05060A">
+    <meta name="description" content="Криспи — Minecraft-рендеры и 3D-анимации в Blender. Работы, отзывы, прайс и заказ в Telegram.">
     <style>
         :root {
             --orange: #FF6A00;
@@ -1360,6 +1360,171 @@
             .lightbox-img.slide-settle { transition: none; }
             .review-card { transition: border-color 0.25s, box-shadow 0.25s; }
         }
+        /* Targeted additions: preserve the existing portfolio layout and palette. */
+        @font-face {
+            font-family: 'Manrope'; src: url('media/fonts/manrope.woff') format('woff');
+            font-weight: 200 800; font-display: swap;
+        }
+        @font-face {
+            font-family: 'Bebas Neue'; src: url('media/fonts/bebas-neue.woff') format('woff');
+            font-weight: 400; font-display: swap;
+        }
+        :root { color-scheme: dark; scroll-padding-top: 84px; }
+        [hidden] { display: none !important; }
+        :focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
+        html:not(.js) .reveal, html:not(.js) .review-card { opacity: 1; transform: none; }
+        html:not(.js) .gallery-item { cursor: default; }
+        .hero-inner > *, .services-inner > *, .review-body { min-width: 0; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; }
+        .voxel-icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; }
+        .gallery-meta { color: var(--muted); font-size: .68rem; letter-spacing: 1px; white-space: nowrap; }
+        .gallery-item:focus-visible { outline-offset: 3px; }
+        .gallery-item:focus-visible .gallery-overlay { opacity: 1; }
+        .gallery-item:focus-visible .gallery-overlay-text { transform: none; }
+        .service-row { gap: 18px; }
+        .service-name { min-width: 0; }
+        .service-price { white-space: nowrap; flex-shrink: 0; }
+        .mobile-nav { height: auto; padding: 0; }
+
+        /* Viewer detail inspiration: esirakuioloh-jpg.github.io/esirak.gihub.io/ — grid and selected thumbnails, in CriSpy's orange. */
+        dialog.lightbox {
+            width: 100%; height: 100vh; height: 100dvh;
+            max-width: none; max-height: none; margin: 0;
+            padding: max(16px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+            border: 0; color: var(--text); overflow: hidden;
+            display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto auto; gap: 14px; align-items: stretch; grid-template-columns: minmax(0, 1fr); justify-content: stretch;
+            opacity: 1; pointer-events: auto;
+            background: rgba(5, 6, 10, .97);
+            backdrop-filter: blur(12px);
+        }
+        dialog.lightbox:not([open]) { display: none; }
+        dialog.lightbox::backdrop { background: rgba(5, 6, 10, .8); }
+        .lightbox-toolbar, .lightbox-footer {
+            width: min(1200px, 100%); margin-inline: auto;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        .lightbox-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .lightbox-tag {
+            padding: 4px 9px; border: 1px solid rgba(255,106,0,.22); border-radius: 4px;
+            background: var(--orange-dim); color: var(--orange);
+            font-size: .65rem; letter-spacing: .8px;
+        }
+        .lightbox-tools { display: flex; gap: 8px; flex-shrink: 0; }
+        .lightbox-tools button, .lightbox-tools a {
+            min-width: 44px; min-height: 44px; padding: 9px 12px;
+            border: 1px solid var(--border); border-radius: 8px;
+            background: var(--bg-card); color: var(--text); font: inherit; font-size: .75rem;
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+            text-decoration: none; cursor: pointer;
+        }
+        .lightbox-tools svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+        .lightbox-tools .lightbox-close { position: static; width: 44px; height: 44px; font-size: 1.1rem; }
+        .lightbox-tools button:hover, .lightbox-tools a:hover, #lb-zoom[aria-pressed="true"] { color: var(--orange); border-color: var(--orange); }
+        .lightbox-stage {
+            width: min(1320px, 100%); min-height: 0; margin-inline: auto;
+            display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; grid-template-rows: minmax(0, 1fr); gap: 14px; align-items: center; height: 100%;
+        }
+        .lightbox-stage .lightbox-nav { position: static; transform: none; min-width: 44px; min-height: 44px; }
+        .lightbox-stage .lightbox-nav:disabled { opacity: .35; cursor: default; }
+        .lightbox-viewport {
+            height: 100%; min-height: 0; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,106,0,.13); border-radius: 12px;
+            background: radial-gradient(ellipse at center, rgba(255,106,0,.055), transparent 75%),
+                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 24px 24px,
+                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 24px 24px,
+                var(--bg-card);
+            touch-action: pan-y;
+        }
+        .lightbox-viewport .lightbox-img {
+            width: auto; height: auto; max-width: 100%; max-height: 100%;
+            object-fit: contain; border: 0; border-radius: 0; box-shadow: none;
+            transform: none; translate: none; will-change: auto;
+            transition: opacity .15s; cursor: zoom-in; user-select: none;
+        }
+        .lightbox-viewport.loading .lightbox-img { opacity: 0; }
+        .lightbox-viewport.zoomed { display: block; overflow: auto; touch-action: auto; overscroll-behavior: contain; }
+        .lightbox-viewport.zoomed .lightbox-img {
+            width: var(--original-width); max-width: none; max-height: none; height: auto; cursor: zoom-out;
+        }
+        .lightbox-feedback {
+            position: absolute; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
+            text-align: center; padding: 24px; font-size: .85rem; color: var(--muted); pointer-events: none;
+        }
+        .lightbox-feedback a { color: var(--orange); pointer-events: auto; }
+        .lightbox-footer .lightbox-caption { font-size: .8rem; letter-spacing: 1px; overflow-wrap: anywhere; }
+        .lightbox-footer .lightbox-counter { position: static; transform: none; font-size: .75rem; flex-shrink: 0; }
+        .lightbox-order { color: var(--orange); font-size: .75rem; text-decoration: none; white-space: nowrap; }
+        .lightbox-order:hover { text-decoration: underline; }
+        .lightbox-thumbs {
+            display: flex; gap: 8px; width: min(1200px, 100%); margin-inline: auto;
+            overflow-x: auto; padding: 5px 3px 8px; scrollbar-width: thin; scrollbar-color: var(--orange) var(--bg-card);
+            overscroll-behavior-inline: contain;
+        }
+        .lightbox-thumb {
+            display: flex; align-items: center; justify-content: center; padding: 3px;
+            width: 66px; height: 60px; flex: 0 0 66px; cursor: pointer;
+            border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card);
+        }
+        .lightbox-thumb img { width: 100%; height: 100%; object-fit: contain; border-radius: 3px; }
+        .lightbox-thumb[aria-current="true"] { border-color: var(--orange); box-shadow: 0 0 0 1px var(--orange), 0 0 12px var(--orange-dim); }
+        .lightbox-thumb:hover { border-color: var(--orange); }
+        .lightbox-hint { color: var(--muted); font-size: .65rem; text-align: center; }
+        .nav-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
+
+        @media (max-width: 900px) {
+            .hero-inner { gap: 32px; }
+            .container .container { padding-inline: 0; }
+            .mobile-nav.open { max-height: min(70vh, 420px); max-height: min(70dvh, 420px); overflow-y: auto; }
+            .mobile-nav-list li a { min-height: 48px; }
+            .mobile-nav { padding: 0; }
+            .lightbox-tag:first-child { display: none; }
+        }
+        @media (max-width: 640px) {
+            .container { padding-inline: 16px; }
+            .hero { padding-top: 92px; }
+            .hero-img-wrap img { object-position: center 35%; }
+            .gallery-filters { display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: thin; scrollbar-color: var(--orange) transparent; }
+            .filter-pill { flex: 0 0 auto; min-height: 44px; }
+            .gallery-meta { display: none; }
+            .stat-item { padding: 24px 14px; }
+            .service-row { padding: 16px; gap: 12px; }
+            .service-name { font-size: .82rem; }
+            .review-footer { flex-wrap: wrap; }
+            .review-author { flex: 1 1 120px; }
+            .glow-blob { filter: blur(64px); opacity: .6; }
+            dialog.lightbox { padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)); gap: 10px; }
+            .lightbox-toolbar { align-items: center; gap: 8px; }
+            .lightbox-tags { min-width: 0; }
+            .lightbox-tag { font-size: .6rem; padding: 4px 6px; }
+            .lightbox-tools { gap: 6px; }
+            .lightbox-tools button, .lightbox-tools a { padding: 9px; }
+            .lightbox-tools .tool-label { display: none; }
+            .lightbox-stage { position: relative; display: flex; }
+            .lightbox-viewport { width: 100%; }
+            .lightbox-stage .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 44px; height: 44px; background: rgba(5,6,10,.78); }
+            .lightbox-stage .lightbox-nav-prev { left: 6px; }
+            .lightbox-stage .lightbox-nav-next { right: 6px; }
+            .lightbox-stage:has(.zoomed) .lightbox-nav { display: none; }
+            .lightbox-footer { flex-wrap: wrap; gap: 6px 14px; }
+            .lightbox-caption { flex: 1 1 180px; }
+            .lightbox-order { flex-basis: 100%; text-align: center; font-size: .7rem; }
+            .lightbox-thumb { width: 54px; height: 49px; flex-basis: 54px; }
+            .lightbox-hint { font-size: .6rem; }
+        }
+        @media (max-height: 500px) and (orientation: landscape) {
+            dialog.lightbox { gap: 6px; padding-block: 8px; }
+            .lightbox-thumbs { display: none; }
+            .lightbox-hint { display: none; }
+            .lightbox-footer { flex-wrap: nowrap; }
+            .lightbox-order { flex-basis: auto; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal, .review-card { opacity: 1; transform: none; }
+        }
     </style>
 </head>
 <body>
@@ -1374,7 +1539,7 @@
         <li><a href="#renders">Рендеры</a></li>
         <li><a href="#services">Услуги</a></li>
         <li><a href="#support">Поддержать</a></li>
-        <li><a href="#" class="nav-cta">Заказать</a></li>
+        <li><a href="https://t.me/Yappy_CriSpy" target="_blank" rel="noopener noreferrer" class="nav-cta">Заказать</a></li>
     </ul>
     <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-nav">
         <span></span>
@@ -1384,12 +1549,12 @@
 </nav>
 
 <!-- MOBILE NAV DRAWER -->
-<nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
+<nav class="mobile-nav" id="mobile-nav" aria-hidden="true" inert>
     <ul class="mobile-nav-list">
         <li><a href="#renders" class="mobile-nav-link">Рендеры</a></li>
         <li><a href="#services" class="mobile-nav-link">Услуги</a></li>
         <li><a href="#support" class="mobile-nav-link">Поддержать</a></li>
-        <li class="mobile-nav-cta-wrap"><a href="#" class="mobile-nav-link">Заказать</a></li>
+        <li class="mobile-nav-cta-wrap"><a href="https://t.me/Yappy_CriSpy" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">Заказать</a></li>
     </ul>
 </nav>
 
@@ -1399,8 +1564,8 @@
     <section class="hero">
         <div class="hero-inner">
             <div class="hero-img-wrap reveal">
-                <img src="main_art.png" alt="CriSpy Art" loading="eager" fetchpriority="high" decoding="async">
-                <div class="hero-badge">3D Artist · Blender</div>
+                <img src="media/previews/main_art-480.webp" srcset="media/previews/main_art-480.webp 480w, media/previews/main_art-960.webp 960w" sizes="(max-width: 900px) calc(100vw - 32px), 420px" width="1536" height="2048" alt="CriSpy Art" loading="eager" fetchpriority="high" decoding="async">
+                <div class="hero-badge"><svg class="voxel-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7zm0 10 9-5M3 7l9 5m0 0v10"/></svg>3D Artist · Blender</div>
             </div>
 
             <div class="hero-content">
@@ -1419,24 +1584,24 @@
                 </p>
 
                 <div class="software-icons reveal reveal-delay-3">
-                    <a href="https://modrinth.com/user/Cr1Spy49" target="_blank" class="soft-icon icon-modrinth" title="Modrinth">
-                        <img src="https://modrinth.com/favicon.ico" alt="Modrinth" loading="lazy" decoding="async">
+                    <a href="https://modrinth.com/user/Cr1Spy49" target="_blank" rel="noopener noreferrer" class="soft-icon icon-modrinth" title="Modrinth">
+                        <img src="Modrinth_logo.png" alt="Modrinth" loading="lazy" decoding="async">
                     </a>
-                    <a href="https://ru.namemc.com/profile/Perchik49.1" target="_blank" class="soft-icon icon-namemc" title="NameMC">
-                        <img src="https://namemc.com/favicon.ico" alt="NameMC" loading="lazy" decoding="async">
+                    <a href="https://ru.namemc.com/profile/Perchik49.1" target="_blank" rel="noopener noreferrer" class="soft-icon icon-namemc" title="NameMC">
+                        <img src="Namemc_logo.png" alt="NameMC" loading="lazy" decoding="async">
                     </a>
-                    <a href="https://steamcommunity.com/id/Cr1Spy49/" target="_blank" class="soft-icon icon-steam" title="Steam">
-                        <img src="https://store.steampowered.com/favicon.ico" alt="Steam" loading="lazy" decoding="async">
+                    <a href="https://steamcommunity.com/id/Cr1Spy49/" target="_blank" rel="noopener noreferrer" class="soft-icon icon-steam" title="Steam">
+                        <img src="media/steam.ico" alt="Steam" loading="lazy" decoding="async">
                     </a>
 
                 </div>
 
                 <div class="hero-btns reveal reveal-delay-4">
-                    <a href="https://t.me/CrispyChoo" target="_blank" class="btn btn-tg">
+                    <a href="https://t.me/CrispyChoo" target="_blank" rel="noopener noreferrer" class="btn btn-tg">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.917 7.158-1.696 7.994c-.127.567-.461.706-.935.439l-2.578-1.9-1.24 1.195c-.138.138-.253.253-.52.253l.185-2.629 4.792-4.33c.208-.185-.046-.287-.32-.102L8.292 14.4l-2.537-.792c-.551-.173-.562-.551.115-.816l9.913-3.82c.459-.167.863.113.716.816z"/></svg>
                         Telegram канал
                     </a>
-                    <a href="https://t.me/Yappy_CriSpy" target="_blank" id="contact" class="btn btn-orange">
+                    <a href="https://t.me/Yappy_CriSpy" target="_blank" rel="noopener noreferrer" id="contact" class="btn btn-orange">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         Связаться со мной
                     </a>
@@ -1484,6 +1649,7 @@
                 </span>
             </button>
             <div class="section-line"></div>
+            <span class="gallery-meta">MINECRAFT / BLENDER</span>
         </div>
 
         <div class="gallery-wrap" id="gallery-wrap">
@@ -1509,76 +1675,76 @@
             </button>
         </div>
         <div class="gallery" oncontextmenu="return false">
-            <div class="gallery-item reveal" data-src="render1.png" data-caption="Подводный мир" data-category="big">
-                <img src="render1.png" alt="Подводный мир" loading="lazy" decoding="async">
+            <div class="gallery-item reveal" data-src="render1.png" data-caption="Подводный мир" data-category="big" role="button" tabindex="0" aria-label="Открыть рендер: Подводный мир">
+                <img src="media/previews/render1-480.webp" srcset="media/previews/render1-480.webp 480w, media/previews/render1-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1080" alt="Подводный мир" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Подводный мир</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-1" data-src="render2.jpg" data-caption="Хэллоуин" data-category="big">
-                <img src="render2.jpg" alt="Хэллоуин" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render2.jpg" data-caption="Хэллоуин" data-category="big" role="button" tabindex="0" aria-label="Открыть рендер: Хэллоуин">
+                <img src="media/previews/render2-480.webp" srcset="media/previews/render2-480.webp 480w, media/previews/render2-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1080" alt="Хэллоуин" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Хэллоуин</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2" data-src="render3.jpg" data-caption="День всех влюблённых" data-category="big">
-                <img src="render3.jpg" alt="День всех влюблённых" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render3.jpg" data-caption="День всех влюблённых" data-category="big" role="button" tabindex="0" aria-label="Открыть рендер: День всех влюблённых">
+                <img src="media/previews/render3-480.webp" srcset="media/previews/render3-480.webp 480w, media/previews/render3-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="2560" height="1429" alt="День всех влюблённых" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">День всех влюблённых</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3" data-src="render4.jpg" data-caption="Крутой челик под деревом" data-category="medium">
-                <img src="render4.jpg" alt="Крутой челик под деревом" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render4.jpg" data-caption="Крутой челик под деревом" data-category="medium" role="button" tabindex="0" aria-label="Открыть рендер: Крутой челик под деревом">
+                <img src="media/previews/render4-480.webp" srcset="media/previews/render4-480.webp 480w, media/previews/render4-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="2560" height="1440" alt="Крутой челик под деревом" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Крутой челик под деревом</span></div>
             </div>
 
             <!-- Квадратные рендеры (1:1) -->
-            <div class="gallery-item reveal" data-src="render5.jpg" data-caption="Голова с шапкой" data-category="head-models">
-                <img src="render5.jpg" alt="Голова с шапкой" loading="lazy" decoding="async">
+            <div class="gallery-item reveal" data-src="render5.jpg" data-caption="Голова с шапкой" data-category="head-models" role="button" tabindex="0" aria-label="Открыть рендер: Голова с шапкой">
+                <img src="media/previews/render5-480.webp" srcset="media/previews/render5-480.webp 480w, media/previews/render5-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="2560" height="2560" alt="Голова с шапкой" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Голова с шапкой</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-1" data-src="render6.jpg" data-caption="Парень в очках" data-category="head-basic">
-                <img src="render6.jpg" alt="Парень в очках" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render6.jpg" data-caption="Парень в очках" data-category="head-basic" role="button" tabindex="0" aria-label="Открыть рендер: Парень в очках">
+                <img src="media/previews/render6-480.webp" srcset="media/previews/render6-480.webp 480w, media/previews/render6-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Парень в очках" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Парень в очках</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2" data-src="render7.jpg" data-caption="Медовая голова" data-category="head-basic">
-                <img src="render7.jpg" alt="Медовая голова" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render7.jpg" data-caption="Медовая голова" data-category="head-basic" role="button" tabindex="0" aria-label="Открыть рендер: Медовая голова">
+                <img src="media/previews/render7-480.webp" srcset="media/previews/render7-480.webp 480w, media/previews/render7-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Медовая голова" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Медовая голова</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3" data-src="render8.jpg" data-caption="Очень крутой парень" data-category="medium">
-                <img src="render8.jpg" alt="Очень крутой парень" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render8.jpg" data-caption="Очень крутой парень" data-category="medium" role="button" tabindex="0" aria-label="Открыть рендер: Очень крутой парень">
+                <img src="media/previews/render8-480.webp" srcset="media/previews/render8-480.webp 480w, media/previews/render8-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="2560" height="2560" alt="Очень крутой парень" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Очень крутой парень</span></div>
             </div>
 
             <!-- Вертикальный рендер (portrait) -->
-            <div class="gallery-item reveal" data-src="render9.jpg" data-caption="Холодный апокалипсис" data-category="medium">
-                <img src="render9.jpg" alt="Холодный апокалипсис" loading="lazy" decoding="async">
+            <div class="gallery-item reveal" data-src="render9.jpg" data-caption="Холодный апокалипсис" data-category="medium" role="button" tabindex="0" aria-label="Открыть рендер: Холодный апокалипсис">
+                <img src="media/previews/render9-480.webp" srcset="media/previews/render9-480.webp 480w, media/previews/render9-960.webp 720w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="720" height="1280" alt="Холодный апокалипсис" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Холодный апокалипсис</span></div>
             </div>
 
             <!-- Стандартные горизонтальные (16:10) -->
-            <div class="gallery-item reveal reveal-delay-1" data-src="render10.jpg" data-caption="Данте и Вергилий" data-category="medium">
-                <img src="render10.jpg" alt="Данте и Вергилий" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render10.jpg" data-caption="Данте и Вергилий" data-category="medium" role="button" tabindex="0" aria-label="Открыть рендер: Данте и Вергилий">
+                <img src="media/previews/render10-480.webp" srcset="media/previews/render10-480.webp 480w, media/previews/render10-960.webp 736w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="736" height="414" alt="Данте и Вергилий" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Данте и Вергилий</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-2" data-src="render11.jpg" data-caption="Занудная учёба" data-category="medium">
-                <img src="render11.jpg" alt="Занудная учёба" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render11.jpg" data-caption="Занудная учёба" data-category="medium" role="button" tabindex="0" aria-label="Открыть рендер: Занудная учёба">
+                <img src="media/previews/render11-480.webp" srcset="media/previews/render11-480.webp 480w, media/previews/render11-960.webp 736w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="736" height="414" alt="Занудная учёба" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Занудная учёба</span></div>
             </div>
-            <div class="gallery-item reveal reveal-delay-3" data-src="render12.jpg" data-caption="Парень у костра" data-category="big">
-                <img src="render12.jpg" alt="Парень у костра" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-3" data-src="render12.jpg" data-caption="Парень у костра" data-category="big" role="button" tabindex="0" aria-label="Открыть рендер: Парень у костра">
+                <img src="media/previews/render12-480.webp" srcset="media/previews/render12-480.webp 480w, media/previews/render12-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="3840" height="2160" alt="Парень у костра" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Парень у костра</span></div>
             </div>
 
             <!-- Квадратный рендер (1:1) -->
-            <div class="gallery-item reveal" data-src="render13.jpg" data-caption="Вкусный малышочек" data-category="head-models">
-                <img src="render13.jpg" alt="Вкусный малышочек" loading="lazy" decoding="async">
+            <div class="gallery-item reveal" data-src="render13.jpg" data-caption="Вкусный малышочек" data-category="head-models" role="button" tabindex="0" aria-label="Открыть рендер: Вкусный малышочек">
+                <img src="media/previews/render13-480.webp" srcset="media/previews/render13-480.webp 480w, media/previews/render13-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Вкусный малышочек" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Вкусный малышочек</span></div>
             </div>
 
             <!-- Вертикальный рендер (portrait) -->
-            <div class="gallery-item reveal reveal-delay-1" data-src="render14.jpg" data-caption="Телефонный клоун" data-category="none">
-                <img src="render14.jpg" alt="Телефонный клоун" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-1" data-src="render14.jpg" data-caption="Телефонный клоун" data-category="none" role="button" tabindex="0" aria-label="Открыть рендер: Телефонный клоун">
+                <img src="media/previews/render14-480.webp" srcset="media/previews/render14-480.webp 480w, media/previews/render14-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="2610" height="3840" alt="Телефонный клоун" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Телефонный клоун</span></div>
             </div>
 
             <!-- Квадратный рендер (1:1) -->
-            <div class="gallery-item reveal reveal-delay-2" data-src="render15.jpg" data-caption="Страшный бро" data-category="big">
-                <img src="render15.jpg" alt="Страшный бро" loading="lazy" decoding="async">
+            <div class="gallery-item reveal reveal-delay-2" data-src="render15.jpg" data-caption="Страшный бро" data-category="big" role="button" tabindex="0" aria-label="Открыть рендер: Страшный бро">
+                <img src="media/previews/render15-480.webp" srcset="media/previews/render15-480.webp 480w, media/previews/render15-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="3840" height="3840" alt="Страшный бро" loading="lazy" decoding="async">
                 <div class="gallery-overlay"><span class="gallery-overlay-text">Страшный бро</span></div>
             </div>
         </div>
@@ -1607,7 +1773,7 @@
 
             <!-- ОТЗЫВ: Подводный мир -->
             <div class="review-card reveal" data-render-src="render1.png" style="cursor:pointer;">
-                <img class="review-render" src="render1.png" alt="Подводный мир" loading="lazy" decoding="async">
+                <img class="review-render" src="media/previews/render1-480.webp" srcset="media/previews/render1-480.webp 480w, media/previews/render1-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1080" alt="Подводный мир" loading="lazy" decoding="async">
                 <div class="review-body">
                     <div class="review-quote">Крутой рендер , особенно учитывая что первый опыт работы под водичкой вайбово , моя оценка 9/10 иб со светом было бы приятнее как по мне</div>
                     <div class="review-footer">
@@ -1625,7 +1791,7 @@
 
             <!-- ОТЗЫВ: Вкусный малышочек -->
             <div class="review-card reveal reveal-delay-1" data-render-src="render13.jpg" style="cursor:pointer;">
-                <img class="review-render" src="render13.jpg" alt="Вкусный малышочек" loading="lazy" decoding="async">
+                <img class="review-render" src="media/previews/render13-480.webp" srcset="media/previews/render13-480.webp 480w, media/previews/render13-960.webp 960w" sizes="auto, (max-width: 640px) calc(100vw - 32px), (max-width: 900px) 46vw, 340px" width="1920" height="1920" alt="Вкусный малышочек" loading="lazy" decoding="async">
                 <div class="review-body">
                     <div class="review-quote">Как раз то что я и хотел, 8/10 - нечего добавить.</div>
                     <div class="review-footer">
@@ -1735,7 +1901,7 @@
         <p class="hero-tag reveal" style="display:inline-block; margin-bottom:16px;">Поддержка</p>
         <h2 class="support-title reveal">Нравится моя работа?</h2>
         <p class="support-sub reveal">Закинь денюжку автору на пропитание</p>
-        <a href="https://boosty.to/cr1spy" target="_blank" class="btn-support reveal reveal-delay-1">
+        <a href="https://boosty.to/cr1spy" target="_blank" rel="noopener noreferrer" class="btn-support reveal reveal-delay-1">
             <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z"/>
             </svg>
@@ -1754,20 +1920,27 @@
 </button>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр рендера">
-    <button class="lightbox-nav lightbox-nav-prev" id="lb-prev" aria-label="Предыдущий">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <div class="lightbox-inner">
-        <button class="lightbox-close" id="lb-close" aria-label="Закрыть">✕</button>
-        <img class="lightbox-img" id="lb-img" src="" alt="">
-        <div class="lightbox-caption" id="lb-caption"></div>
-        <div class="lightbox-counter" id="lb-counter"></div>
+<dialog class="lightbox" id="lightbox" aria-labelledby="lb-caption">
+    <div class="lightbox-toolbar">
+        <div class="lightbox-tags"><span class="lightbox-tag">Minecraft / Blender</span><span class="lightbox-tag" id="lb-category">Рендер</span></div>
+        <div class="lightbox-tools">
+            <button type="button" id="lb-zoom" aria-label="Увеличить изображение" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6m-3-3v6"/></svg><span class="tool-label">Увеличить</span></button>
+            <a id="lb-original" href="render1.png" target="_blank" rel="noopener noreferrer" aria-label="Открыть оригинал"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 3H3v18h18v-7"/></svg><span class="tool-label">Оригинал</span></a>
+            <button class="lightbox-close" type="button" id="lb-close" aria-label="Закрыть просмотр" autofocus>✕</button>
+        </div>
     </div>
-    <button class="lightbox-nav lightbox-nav-next" id="lb-next" aria-label="Следующий">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-</div>
+    <div class="lightbox-stage">
+        <button class="lightbox-nav lightbox-nav-prev" type="button" id="lb-prev" aria-label="Предыдущий рендер"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="lightbox-viewport" id="lb-viewport">
+            <img class="lightbox-img" id="lb-img" alt="" draggable="false">
+            <p class="lightbox-feedback" id="lb-feedback" role="status" aria-live="polite" hidden></p>
+        </div>
+        <button class="lightbox-nav lightbox-nav-next" type="button" id="lb-next" aria-label="Следующий рендер"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+    <div class="lightbox-footer"><div class="lightbox-caption" id="lb-caption"></div><span class="lightbox-counter" id="lb-counter" aria-live="polite"></span><a class="lightbox-order" id="lb-order" href="https://t.me/Yappy_CriSpy" target="_blank" rel="noopener noreferrer">Заказать похожий рендер ↗</a></div>
+    <div class="lightbox-thumbs" id="lb-thumbs" role="group" aria-label="Работы выбранной категории"></div>
+    <p class="lightbox-hint">← → — листать · Esc — закрыть · двойной клик — увеличить · свайп на телефоне</p>
+</dialog>
 
 <!-- FOOTER -->
 <footer>
@@ -1780,6 +1953,7 @@
 </footer>
 
 <script>
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     // ─── IMAGE PROTECTION ───
     // Блокируем правую кнопку на лайтбоксе и hero-изображении
     document.addEventListener('contextmenu', (e) => {
@@ -1825,14 +1999,11 @@
 
     // ─── NAV SCROLL ───
     const nav = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
-        nav.style.background = window.scrollY > 40
-            ? 'rgba(5, 6, 10, 0.95)'
-            : 'rgba(5, 6, 10, 0.7)';
-    });
+
 
     // ─── COUNTER ANIMATION ───
     function animateCounter(el, target, suffix = '') {
+        if (reducedMotion.matches) { el.textContent = target + suffix; return; }
         let current = 0;
         const step = target / 40;
         const timer = setInterval(() => {
@@ -1852,52 +2023,29 @@
         rendersCountEl.textContent = galleryItems.length + '+';
     }
 
-    // ─── ФИЛЬТР ГАЛЕРЕИ ───
-    // Стратегия: сначала гасим ВСЕ карточки в 0, и только когда они невидимы —
-    // перестраиваем состав (display none/block). Так смена колонок-masonry
-    // происходит "за кадром", пользователь не видит скачков верстки.
+    // ─── FILTER: preserve the original fade, cancel outdated rapid selections ───
     const filterPills = document.querySelectorAll('.filter-pill');
-    const FILTER_FADE_MS = 250;
-
+    let filterTimer;
     filterPills.forEach(pill => {
+        pill.setAttribute('aria-pressed', String(pill.classList.contains('active')));
         pill.addEventListener('click', () => {
-            const filter = pill.dataset.filter;
             if (pill.classList.contains('active')) return;
-
-            filterPills.forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-
-            // 1. Затемняем вообще все карточки разом
-            galleryItems.forEach(item => {
-                item.style.transition = 'opacity ' + FILTER_FADE_MS + 'ms ease';
-                item.style.opacity = '0';
-                item.style.pointerEvents = 'none';
+            clearTimeout(filterTimer);
+            const filter = pill.dataset.filter;
+            filterPills.forEach(button => {
+                const active = button === pill;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-pressed', String(active));
             });
-
-            // 2. Когда всё уже невидимо — меняем состав (display) и высветляем нужные
-            setTimeout(() => {
+            galleryItems.forEach(item => { item.style.opacity = '0'; item.style.pointerEvents = 'none'; });
+            filterTimer = setTimeout(() => {
                 galleryItems.forEach(item => {
                     const matches = filter === 'all' || item.dataset.category === filter;
-                    if (matches) {
-                        item.classList.remove('filter-gone');
-                    } else {
-                        item.classList.add('filter-gone');
-                    }
+                    item.classList.toggle('filter-gone', !matches);
+                    item.style.opacity = '';
+                    item.style.pointerEvents = '';
                 });
-
-                // даём браузеру кадр применить display, потом высветляем совпавшие
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        galleryItems.forEach(item => {
-                            const matches = filter === 'all' || item.dataset.category === filter;
-                            if (matches) {
-                                item.style.opacity = '1';
-                                item.style.pointerEvents = '';
-                            }
-                        });
-                    });
-                });
-            }, FILTER_FADE_MS);
+            }, reducedMotion.matches ? 0 : 180);
         });
     });
 
@@ -1920,108 +2068,205 @@
     const statsSection = document.querySelector('.stats-section');
     if (statsSection) statsObserver.observe(statsSection);
 
-    // ─── LIGHTBOX ───
+    // ─── LIGHTBOX: the original gallery, with filtered navigation and detail zoom ───
     const lightbox = document.getElementById('lightbox');
-    const lbImg    = document.getElementById('lb-img');
+    const lbImg = document.getElementById('lb-img');
     const lbCaption = document.getElementById('lb-caption');
     const lbCounter = document.getElementById('lb-counter');
-    const lbClose  = document.getElementById('lb-close');
-    const lbPrev   = document.getElementById('lb-prev');
-    const lbNext   = document.getElementById('lb-next');
-
+    const lbClose = document.getElementById('lb-close');
+    const lbPrev = document.getElementById('lb-prev');
+    const lbNext = document.getElementById('lb-next');
+    const lbZoom = document.getElementById('lb-zoom');
+    const lbViewport = document.getElementById('lb-viewport');
+    const lbThumbs = document.getElementById('lb-thumbs');
+    const lbFeedback = document.getElementById('lb-feedback');
     const items = Array.from(galleryItems);
+    const categoryLabels = {
+        'head-basic': 'Голова без моделей', 'head-models': 'Голова с моделями',
+        medium: 'Средний рендер', big: 'Большой рендер', none: 'Эксперимент'
+    };
+    let collection = items;
     let currentIndex = 0;
-    let isAnimating = false;
+    let returnFocus = null;
+    let previousOverflow = '';
+    let zoomed = false;
+    let feedbackTimer;
 
-    function setImage(src, caption, index) {
-        lbImg.src = src;
-        lbImg.alt = caption || '';
-        lbCaption.textContent = caption || '';
-        lbCounter.textContent = `${index + 1} / ${items.length}`;
+    function previewPath(item, width = 1600) {
+        return `media/previews/${item.dataset.src.replace(/\.[^.]+$/, '')}-${width}.webp`;
     }
 
-    function openLightbox(index) {
-        currentIndex = index;
-        const item = items[currentIndex];
-        setImage(item.dataset.src, item.dataset.caption, currentIndex);
-        lightbox.classList.add('active');
+    function hideFeedback() {
+        clearTimeout(feedbackTimer);
+        lbFeedback.hidden = true;
+    }
+
+    function loadImage(source) {
+        hideFeedback();
+        lbViewport.classList.add('loading');
+        lbImg.src = source;
+        feedbackTimer = setTimeout(() => {
+            lbFeedback.textContent = 'Загружаем изображение…';
+            lbFeedback.hidden = false;
+        }, 250);
+        // Cached images may already be decoded when the source is assigned.
+        if (lbImg.complete && lbImg.naturalWidth) {
+            lbViewport.classList.remove('loading');
+            hideFeedback();
+        }
+    }
+
+    function resetZoom() {
+        zoomed = false;
+        lbViewport.classList.remove('zoomed');
+        lbZoom.setAttribute('aria-pressed', 'false');
+        lbZoom.setAttribute('aria-label', 'Увеличить изображение');
+        lbZoom.querySelector('.tool-label').textContent = 'Увеличить';
+        lbViewport.scrollTo(0, 0);
+    }
+
+    function setImage() {
+        const item = collection[currentIndex];
+        const original = item.querySelector('img');
+        resetZoom();
+        lbImg.alt = item.dataset.caption;
+        lbImg.width = Number(original.getAttribute('width'));
+        lbImg.height = Number(original.getAttribute('height'));
+        lbViewport.style.setProperty('--original-width', `${lbImg.width}px`);
+        lbCaption.textContent = item.dataset.caption;
+        lbCounter.textContent = `${currentIndex + 1} / ${collection.length}`;
+        document.getElementById('lb-category').textContent = categoryLabels[item.dataset.category] || 'Рендер';
+        document.getElementById('lb-original').href = item.dataset.src;
+        document.getElementById('lb-order').href = `https://t.me/Yappy_CriSpy?text=${encodeURIComponent(`Привет! Хочу обсудить рендер в стиле «${item.dataset.caption}».`)}`;
+        lbPrev.disabled = lbNext.disabled = collection.length < 2;
+        Array.from(lbThumbs.children).forEach((button, i) => {
+            if (i === currentIndex) button.setAttribute('aria-current', 'true');
+            else button.removeAttribute('aria-current');
+        });
+        const active = lbThumbs.children[currentIndex];
+        if (active && lightbox.open) active.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+        loadImage(previewPath(item));
+    }
+
+    function buildThumbs() {
+        const fragment = document.createDocumentFragment();
+        collection.forEach((item, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'lightbox-thumb';
+            button.setAttribute('aria-label', `Показать: ${item.dataset.caption}`);
+            const image = document.createElement('img');
+            image.src = previewPath(item, 480);
+            image.alt = '';
+            image.loading = 'lazy';
+            image.decoding = 'async';
+            button.append(image);
+            button.addEventListener('click', () => { currentIndex = index; setImage(); });
+            fragment.append(button);
+        });
+        lbThumbs.replaceChildren(fragment);
+    }
+
+    function openLightbox(index, trigger = document.activeElement) {
+        const item = items[index];
+        if (!item) return;
+        if (typeof lightbox.showModal !== 'function') {
+            window.open(item.dataset.src, '_blank', 'noopener');
+            return;
+        }
+        if (!lightbox.open) {
+            returnFocus = trigger;
+            previousOverflow = document.body.style.overflow;
+        }
+        const selected = document.querySelector('.filter-pill.active')?.dataset.filter || 'all';
+        const filtered = items.filter(entry => selected === 'all' || entry.dataset.category === selected);
+        collection = filtered.includes(item) ? filtered : items;
+        currentIndex = collection.indexOf(item);
+        buildThumbs();
+        setImage();
+        if (!lightbox.open) lightbox.showModal();
         document.body.style.overflow = 'hidden';
-        lbClose.focus();
+        lightbox.classList.add('active');
+        lbClose.focus({ preventScroll: true });
     }
 
-    function closeLightbox() {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
-        lbImg.className = 'lightbox-img';
-    }
+    function closeLightbox() { if (lightbox.open) lightbox.close(); }
 
     function navigate(direction) {
-        if (isAnimating) return;
-        isAnimating = true;
-
-        const outClass = direction > 0 ? 'slide-out-left' : 'slide-out-right';
-        const inClass  = direction > 0 ? 'slide-in-left'  : 'slide-in-right';
-
-        lbImg.classList.add(outClass);
-
-        setTimeout(() => {
-            currentIndex = (currentIndex + direction + items.length) % items.length;
-            const item = items[currentIndex];
-            setImage(item.dataset.src, item.dataset.caption, currentIndex);
-
-            lbImg.classList.remove(outClass);
-            lbImg.classList.add(inClass);
-
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    lbImg.classList.remove(inClass);
-                    lbImg.classList.add('slide-settle');
-
-                    setTimeout(() => {
-                        lbImg.classList.remove('slide-settle');
-                        isAnimating = false;
-                    }, 280);
-                });
-            });
-        }, 200);
+        currentIndex = (currentIndex + direction + collection.length) % collection.length;
+        setImage();
     }
 
-    items.forEach((item, i) => {
-        item.addEventListener('click', () => openLightbox(i));
-    });
+    function toggleZoom() {
+        zoomed = !zoomed;
+        lbViewport.classList.toggle('zoomed', zoomed);
+        lbZoom.setAttribute('aria-pressed', String(zoomed));
+        lbZoom.setAttribute('aria-label', zoomed ? 'Уместить изображение' : 'Увеличить изображение');
+        lbZoom.querySelector('.tool-label').textContent = zoomed ? 'Уместить' : 'Увеличить';
+        lbViewport.scrollTo(0, 0);
+        loadImage(zoomed ? collection[currentIndex].dataset.src : previewPath(collection[currentIndex]));
+    }
 
+    lbImg.addEventListener('load', () => { lbViewport.classList.remove('loading'); hideFeedback(); });
+    lbImg.addEventListener('error', () => {
+        hideFeedback();
+        lbFeedback.replaceChildren(document.createTextNode('Не удалось загрузить изображение. '));
+        const link = document.createElement('a');
+        link.href = collection[currentIndex].dataset.src;
+        link.target = '_blank'; link.rel = 'noopener noreferrer';
+        link.textContent = 'Открыть оригинал';
+        lbFeedback.append(link);
+        lbFeedback.hidden = false;
+    });
+    items.forEach((item, index) => {
+        item.addEventListener('click', () => openLightbox(index, item));
+        item.addEventListener('keydown', event => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            openLightbox(index, item);
+        });
+    });
     lbClose.addEventListener('click', closeLightbox);
     lbPrev.addEventListener('click', () => navigate(-1));
     lbNext.addEventListener('click', () => navigate(1));
-
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) closeLightbox();
+    lbZoom.addEventListener('click', toggleZoom);
+    lbImg.addEventListener('dblclick', toggleZoom);
+    lightbox.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
+    lightbox.addEventListener('close', () => {
+        hideFeedback(); resetZoom();
+        lightbox.classList.remove('active');
+        document.body.style.overflow = previousOverflow;
+        lbImg.removeAttribute('src');
+        lbThumbs.replaceChildren();
+        if (returnFocus && returnFocus.getClientRects().length) returnFocus.focus({ preventScroll: true });
+        returnFocus = null;
     });
-
-    document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
-        if (e.key === 'Escape')     closeLightbox();
-        if (e.key === 'ArrowLeft')  navigate(-1);
-        if (e.key === 'ArrowRight') navigate(1);
-    });
-
-    // ─── LIGHTBOX TOUCH SWIPE ───
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    lightbox.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    lightbox.addEventListener('touchend', (e) => {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const dy = e.changedTouches[0].clientY - touchStartY;
-        // Только горизонтальный свайп (dy < 60 чтоб не путать со скроллом)
-        if (Math.abs(dx) > 50 && Math.abs(dy) < 60) {
-            navigate(dx < 0 ? 1 : -1);
+    lightbox.addEventListener('keydown', event => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            event.preventDefault();
+            navigate(event.key === 'ArrowLeft' ? -1 : 1);
         }
+        if (event.key === 'Tab') {
+            const focusable = Array.from(lightbox.querySelectorAll('button:not(:disabled), a[href]')).filter(element => element.getClientRects().length);
+            const first = focusable[0], last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+    });
+    let touchStart = null;
+    lbViewport.addEventListener('touchstart', event => {
+        touchStart = !zoomed && event.touches.length === 1
+            ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
     }, { passive: true });
+    lbViewport.addEventListener('touchmove', event => { if (event.touches.length !== 1) touchStart = null; }, { passive: true });
+    lbViewport.addEventListener('touchend', event => {
+        if (!touchStart || zoomed || !event.changedTouches.length) return;
+        const dx = event.changedTouches[0].clientX - touchStart.x;
+        const dy = event.changedTouches[0].clientY - touchStart.y;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) navigate(dx < 0 ? 1 : -1);
+        touchStart = null;
+    }, { passive: true });
+    lbViewport.addEventListener('touchcancel', () => { touchStart = null; }, { passive: true });
 
     // ─── GALLERY TOGGLE ───
     const galleryToggleBtn = document.getElementById('gallery-toggle');
@@ -2047,6 +2292,12 @@
 
     // ─── REVIEW CARD → GALLERY LINK ───
     document.querySelectorAll('.review-card[data-render-src]').forEach(card => {
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Посмотреть рендер: ${card.querySelector('img').alt}`);
+        card.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); card.click(); }
+        });
         card.addEventListener('click', () => {
             const src = card.dataset.renderSrc;
             const targetIndex = items.findIndex(item => item.dataset.src === src);
@@ -2058,56 +2309,47 @@
                 galleryHeader.classList.remove('gallery-collapsed');
             }
 
-            const rendersSection = document.getElementById('renders');
-            rendersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            setTimeout(() => openLightbox(targetIndex), 500);
+            openLightbox(targetIndex, card);
         });
     });
 
-    // ─── BURGER MENU ───
-    const burger     = document.getElementById('burger');
-    const mobileNav  = document.getElementById('mobile-nav');
-
-    burger.addEventListener('click', () => {
-        const isOpen = mobileNav.classList.toggle('open');
-        burger.classList.toggle('open', isOpen);
-        burger.setAttribute('aria-expanded', String(isOpen));
-        mobileNav.setAttribute('aria-hidden', String(!isOpen));
+    // ─── MOBILE MENU: closed links are inert and do not trap keyboard focus ───
+    const burger = document.getElementById('burger');
+    const mobileNav = document.getElementById('mobile-nav');
+    function setMobileMenu(open) {
+        mobileNav.classList.toggle('open', open);
+        mobileNav.inert = !open;
+        burger.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+        mobileNav.setAttribute('aria-hidden', String(!open));
+    }
+    setMobileMenu(false);
+    burger.addEventListener('click', () => setMobileMenu(!mobileNav.classList.contains('open')));
+    document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', () => setMobileMenu(false)));
+    document.addEventListener('click', event => {
+        if (!mobileNav.contains(event.target) && !burger.contains(event.target)) setMobileMenu(false);
     });
-
-    // Закрываем при клике на ссылку
-    document.querySelectorAll('.mobile-nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileNav.classList.remove('open');
-            burger.classList.remove('open');
-            burger.setAttribute('aria-expanded', 'false');
-            mobileNav.setAttribute('aria-hidden', 'true');
-        });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && mobileNav.classList.contains('open')) { setMobileMenu(false); burger.focus(); }
     });
-
-    // Закрываем при клике вне меню
-    document.addEventListener('click', (e) => {
-        if (!mobileNav.contains(e.target) && !burger.contains(e.target)) {
-            mobileNav.classList.remove('open');
-            burger.classList.remove('open');
-            burger.setAttribute('aria-expanded', 'false');
-            mobileNav.setAttribute('aria-hidden', 'true');
-        }
-    });
+    matchMedia('(min-width: 901px)').addEventListener('change', event => { if (event.matches) setMobileMenu(false); });
 
     // ─── SCROLL TO TOP ───
     const scrollTopBtn = document.getElementById('scroll-top');
 
+    let scrollFrame = 0;
+    function updateScrollUI() {
+        nav.style.background = window.scrollY > 40 ? 'rgba(5, 6, 10, 0.95)' : 'rgba(5, 6, 10, 0.7)';
+        scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+        scrollFrame = 0;
+    }
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 400) {
-            scrollTopBtn.classList.add('visible');
-        } else {
-            scrollTopBtn.classList.remove('visible');
-        }
+        if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollUI);
     }, { passive: true });
-
+    updateScrollUI();
     scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
     });
 
 </script>
