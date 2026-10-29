@@ -64,7 +64,7 @@ class PortfolioChecks(unittest.TestCase):
     def test_01_original_sections_and_design_preserved(self):
         expect(self.page).to_have_title('CriSpy | 3D Portfolio')
         expect(self.page.locator('.hero h1')).to_have_text('Привет,Я Криспи!')
-        self.assertEqual(self.page.locator('.gallery-item').count(), 15)
+        self.assertEqual(self.page.locator('.gallery-item').count(), 17)
         self.assertEqual(self.page.locator('.review-card').count(), 2)
         self.assertEqual(self.page.locator('.service-row').count(), 5)
         self.assertEqual(self.page.evaluate('getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()'), '#FF6A00')
@@ -80,14 +80,14 @@ class PortfolioChecks(unittest.TestCase):
         self.assertLess(layout['heroHeight'], 740)
 
     def test_02_category_counts_and_rapid_filter_changes(self):
-        for name, count in [('head-basic', 2), ('head-models', 2), ('medium', 5), ('big', 5), ('all', 15)]:
+        for name, count in [('head-basic', 2), ('head-models', 2), ('medium', 6), ('big', 6), ('all', 17)]:
             self.filter(name, count)
         self.page.evaluate('''() => {
             document.querySelector('[data-filter="head-basic"]').click();
             document.querySelector('[data-filter="medium"]').click();
             document.querySelector('[data-filter="big"]').click();
         }''')
-        expect(self.page.locator('.gallery-item:not(.filter-gone)')).to_have_count(5)
+        expect(self.page.locator('.gallery-item:not(.filter-gone)')).to_have_count(6)
         expect(self.page.locator('.filter-pill.active')).to_have_attribute('data-filter', 'big')
         self.assertEqual(self.page.locator('.gallery-item:not(.filter-gone)').evaluate_all('els=>els.every(el=>el.dataset.category==="big")'), True)
 
@@ -108,7 +108,7 @@ class PortfolioChecks(unittest.TestCase):
         self.open()
         self.page.locator('.lightbox-thumb').nth(11).click()
         expect(self.page.locator('#lb-caption')).to_have_text('Парень у костра')
-        expect(self.page.locator('#lb-counter')).to_have_text('12 / 15')
+        expect(self.page.locator('#lb-counter')).to_have_text('12 / 17')
         expect(self.page.locator('.lightbox-thumb[aria-current="true"]')).to_have_count(1)
         expect(self.page.locator('#lb-original')).to_have_attribute('href', 'render12.jpg')
         text = parse_qs(urlparse(self.page.locator('#lb-order').get_attribute('href')).query)['text'][0]
@@ -201,13 +201,13 @@ class PortfolioChecks(unittest.TestCase):
             el.dispatchEvent(new TouchEvent('touchstart',{touches:[point(250)]}));
             el.dispatchEvent(new TouchEvent('touchend',{changedTouches:[point(100)]}));
         }''')
-        expect(self.page.locator('#lb-counter')).to_have_text('2 / 15')
+        expect(self.page.locator('#lb-counter')).to_have_text('2 / 17')
         self.page.locator('#lb-viewport').evaluate('''el=>{
             const point=(x,id)=>new Touch({identifier:id,target:el,clientX:x,clientY:100});
             el.dispatchEvent(new TouchEvent('touchstart',{touches:[point(250,1),point(200,2)]}));
             el.dispatchEvent(new TouchEvent('touchend',{changedTouches:[point(100,1)]}));
         }''')
-        expect(self.page.locator('#lb-counter')).to_have_text('2 / 15')
+        expect(self.page.locator('#lb-counter')).to_have_text('2 / 17')
 
     def test_12_loading_error_offers_original(self):
         self.page.route('**/render1-1600.webp', lambda route: route.abort())
@@ -242,7 +242,7 @@ class PortfolioChecks(unittest.TestCase):
             self.assertEqual(page.locator('.reveal').first.evaluate('el=>getComputedStyle(el).opacity'), '1')
             expect(page.locator('#lightbox')).not_to_be_visible()
             expect(page.locator('.nav-cta')).to_have_attribute('href', 'https://t.me/Yappy_CriSpy')
-            self.assertEqual(page.locator('.gallery-item').count(), 15)
+            self.assertEqual(page.locator('.gallery-item').count(), 17)
         finally:
             context.close()
 
@@ -251,7 +251,7 @@ class PortfolioChecks(unittest.TestCase):
         review = self.page.locator('.review-card').first
         review.click()
         expect(self.page.locator('#lb-caption')).to_have_text('Подводный мир')
-        expect(self.page.locator('#lb-counter')).to_have_text('1 / 15')
+        expect(self.page.locator('#lb-counter')).to_have_text('1 / 17')
         self.page.keyboard.press('Escape')
         expect(review).to_be_focused()
 
@@ -325,7 +325,7 @@ class PortfolioChecks(unittest.TestCase):
         self.assertEqual(self.page.locator('.ink-frame').nth(0).evaluate('e=>getComputedStyle(e).opacity'), '1')
         self.assertEqual(self.page.locator('.ink-frame').nth(1).evaluate('e=>getComputedStyle(e).opacity'), '0')
         self.open()
-        expect(self.page.locator('#lb-counter')).to_have_text('1 / 15')
+        expect(self.page.locator('#lb-counter')).to_have_text('1 / 17')
 
     def test_21_pause_still_works_when_storage_is_unavailable(self):
         self.page.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw Error('blocked')}})")
@@ -386,7 +386,7 @@ class PortfolioChecks(unittest.TestCase):
         held[0].fulfill(path=str(ROOT/'render13.jpg'), content_type='image/png')
         self.page.wait_for_load_state('networkidle')
         expect(self.page.locator('#lb-img')).to_have_attribute('src', 'media/previews/render14-1600.webp')
-        expect(self.page.locator('#lb-counter')).to_have_text('14 / 15')
+        expect(self.page.locator('#lb-counter')).to_have_text('14 / 17')
         expect(self.page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'false')
 
     def test_25_real_touch_pinch_zooms_image_without_changing_render(self):
@@ -407,7 +407,7 @@ class PortfolioChecks(unittest.TestCase):
                 session.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': fingers(distance)})
             session.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
             expect(page.locator('#lb-zoom')).to_have_attribute('aria-pressed', 'true')
-            expect(page.locator('#lb-counter')).to_have_text('13 / 15')
+            expect(page.locator('#lb-counter')).to_have_text('13 / 17')
             session.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': fingers(80)})
             for distance in [70, 60, 50, 40]:
                 session.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': fingers(distance)})

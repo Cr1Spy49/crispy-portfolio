@@ -14,6 +14,7 @@ def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     originals = [ROOT / "main_art.png", ROOT / "render1.png"]
     originals += [ROOT / f"render{i}.jpg" for i in range(2, 16)]
+    originals += [ROOT / f"render{i}.png" for i in (16, 17)]
     total = 0
     for source in originals:
         with Image.open(source) as original:
